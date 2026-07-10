@@ -1,0 +1,521 @@
+import React, { useState, useEffect } from 'react';
+import { 
+  Brain, 
+  Sparkles, 
+  ShieldAlert, 
+  Wand2, 
+  RefreshCw, 
+  Copy, 
+  CheckCircle2, 
+  ChevronRight, 
+  AlertCircle,
+  Clock,
+  Zap,
+  Radio
+} from 'lucide-react';
+import { motion, AnimatePresence } from 'motion/react';
+
+interface AiDiagnosisCardProps {
+  projectName: string;
+  riskLevel: string;
+  riskPercentage: number;
+  riskData: {
+    credit: number;
+    tech: number;
+    economic: number;
+    device: number;
+  };
+}
+
+export default function AiDiagnosisCard({
+  projectName,
+  riskLevel,
+  riskPercentage,
+  riskData
+}: AiDiagnosisCardProps) {
+  const [activeTab, setActiveTab] = useState<'conclusion' | 'advice'>('conclusion');
+  const [isDiagnosing, setIsDiagnosing] = useState(false);
+  const [copied, setCopied] = useState(false);
+  const [robotMood, setRobotMood] = useState<'analyzing' | 'warning' | 'helpful'>('warning');
+
+  // Sync robot mood with tab changes or actions
+  useEffect(() => {
+    if (isDiagnosing) {
+      setRobotMood('analyzing');
+    } else if (activeTab === 'conclusion') {
+      setRobotMood('warning');
+    } else {
+      setRobotMood('helpful');
+    }
+  }, [activeTab, isDiagnosing]);
+
+  // Simulate Diagnose Re-run
+  const handleRediagnose = () => {
+    setIsDiagnosing(true);
+    setTimeout(() => {
+      setIsDiagnosing(false);
+    }, 1500);
+  };
+
+  const handleCopy = () => {
+    const textToCopy = `【比对结果 AI 智能诊断报告】\n项目名称：${projectName}\n风险级别：${riskLevel} (${riskPercentage}%)\n\n[AI诊断结论]\n${
+      riskPercentage >= 70 
+        ? "经系统穿透性审计，本项目包含极其严重的“串通投标”核心违规指纹。多家投标人在投标文件编写设备指纹、经济标计价软件锁号等底层信息上完全重合，属于《招标投标法》中明确规定的视为串标情形。"
+        : "经系统审计，本项目目前属于中低度违规风险，但发现个别招标文件作者元数据及部分次要段落存在较高雷同，请重点关注技术方案模板的使用合规性。"
+    }\n\n[关键风险拆解]\n- 物理指纹同源性：发现 ${riskData.device} 处完全重叠的 MAC 硬件地址与硬盘序列号。\n- 编写行为一致性：技术标存在 ${riskData.tech} 处 100% 相似重合段落。\n- 报价计价工具一致：经济标存在 ${riskData.economic} 处共用广联达计价加密锁异常。`;
+    
+    navigator.clipboard.writeText(textToCopy);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
+
+  // Robot speech context
+  const getRobotSpeech = () => {
+    if (isDiagnosing) {
+      return {
+        tag: "系统重组中",
+        text: "正在接入招投标合规法规库与语义大模型，对当前标书进行全量数字指纹还原和碰撞诊断，请稍等...",
+        alert: "AI 审计核心：全速运行中"
+      };
+    }
+    if (activeTab === 'conclusion') {
+      return {
+        tag: "雷达合规预警",
+        text: `报告主人！经我全量指纹比对，当前项目检出 ${riskData.device + riskData.tech + riskData.economic + riskData.credit} 处高度同源的异常重合！这在招投标行政核查中属于【视为串通投标】的红线地带，请务必当心。`,
+        alert: "安全评分：极度高危 (红线)"
+      };
+    } else {
+      return {
+        tag: "避坑实战策略",
+        text: "我为您连夜整理了全套整改指南！最核心的就是【物理隔离+干净新建】。请按照我给您的三步走策略进行标书重构，轻轻松松规避高风险检测，顺利上岸！",
+        alert: "合规建议：已针对性优化"
+      };
+    }
+  };
+
+  const speech = getRobotSpeech();
+
+  return (
+    <div className="bg-gradient-to-br from-indigo-50/40 via-violet-50/30 to-white rounded-2xl border border-indigo-100 shadow-sm overflow-hidden relative">
+      {/* Top ambient glow decor */}
+      <div className="absolute top-0 right-0 w-80 h-32 bg-gradient-to-l from-indigo-200/20 to-transparent blur-2xl rounded-full pointer-events-none" />
+      <div className="absolute top-12 left-24 w-40 h-16 bg-violet-200/10 blur-xl rounded-full pointer-events-none" />
+
+      {/* Header */}
+      <div className="px-6 py-5 border-b border-indigo-100/60 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div className="flex items-center gap-2.5">
+          <div className="p-2.5 bg-gradient-to-br from-indigo-600 to-violet-600 rounded-xl text-white shadow-md shadow-indigo-600/10">
+            <Brain className="w-5 h-5" />
+          </div>
+          <div>
+            <div className="flex items-center gap-2">
+              <h3 className="font-bold text-slate-800 text-base">比对结果 AI 智能诊断</h3>
+              <span className="flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-extrabold bg-indigo-100 text-indigo-700 uppercase animate-pulse border border-indigo-200">
+                <Sparkles className="w-2.5 h-2.5" />
+                Gemini Powered
+              </span>
+            </div>
+            <p className="text-xs text-slate-500 mt-1">基于大模型与招投标合规审计规则，进行穿透式风险研判与防范处置分析</p>
+          </div>
+        </div>
+        
+        <div className="flex items-center gap-2">
+          <button 
+            onClick={handleRediagnose}
+            disabled={isDiagnosing}
+            className="px-3.5 py-1.5 bg-white border border-slate-200 hover:border-indigo-200 rounded-lg text-slate-600 hover:text-indigo-600 text-xs font-semibold shadow-sm transition-all flex items-center gap-1.5 disabled:opacity-50"
+          >
+            <RefreshCw className={`w-3.5 h-3.5 ${isDiagnosing ? 'animate-spin text-indigo-600' : ''}`} />
+            {isDiagnosing ? '诊断刷新中...' : '重新诊断'}
+          </button>
+          <button 
+            onClick={handleCopy}
+            className="px-3.5 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg text-xs font-semibold shadow-sm transition-all flex items-center gap-1.5"
+          >
+            {copied ? (
+              <>
+                <CheckCircle2 className="w-3.5 h-3.5" />
+                <span>已复制诊断结果</span>
+              </>
+            ) : (
+              <>
+                <Copy className="w-3.5 h-3.5" />
+                <span>一键复制诊断意见</span>
+              </>
+            )}
+          </button>
+        </div>
+      </div>
+
+      <div className="grid grid-cols-1 lg:grid-cols-12 divide-y lg:divide-y-0 lg:divide-x divide-indigo-100/60 min-h-[420px]">
+        
+        {/* Left Side: Diagnostic tabs & static structured insights */}
+        <div className="lg:col-span-7 p-6 flex flex-col justify-between">
+          <div className="space-y-5">
+            {/* Nav Tabs */}
+            <div className="flex bg-slate-100/80 p-1 rounded-lg w-fit">
+              <button 
+                onClick={() => setActiveTab('conclusion')}
+                className={`px-4 py-1.5 rounded-md text-xs font-bold transition-all flex items-center gap-1.5 ${activeTab === 'conclusion' ? 'bg-white text-indigo-700 shadow-sm font-extrabold' : 'text-slate-600 hover:text-slate-900'}`}
+              >
+                <ShieldAlert className="w-3.5 h-3.5" />
+                AI 诊断结论
+              </button>
+              <button 
+                onClick={() => setActiveTab('advice')}
+                className={`px-4 py-1.5 rounded-md text-xs font-bold transition-all flex items-center gap-1.5 ${activeTab === 'advice' ? 'bg-white text-indigo-700 shadow-sm font-extrabold' : 'text-slate-600 hover:text-slate-900'}`}
+              >
+                <Wand2 className="w-3.5 h-3.5" />
+                AI 整改建议
+              </button>
+            </div>
+
+            {/* Dynamic content rendering with motion */}
+            <AnimatePresence mode="wait">
+              {activeTab === 'conclusion' ? (
+                <motion.div 
+                  key="conclusion"
+                  initial={{ opacity: 0, y: 5 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -5 }}
+                  transition={{ duration: 0.15 }}
+                  className="space-y-4"
+                >
+                  <div className="bg-white/75 p-4 rounded-xl border border-indigo-50/80 shadow-sm space-y-3">
+                    <div className="flex items-center gap-2">
+                      <span className="w-1.5 h-4 bg-indigo-600 rounded" />
+                      <h4 className="text-sm font-bold text-slate-800">风控审计判词</h4>
+                    </div>
+                    <p className="text-xs leading-relaxed text-slate-600">
+                      经系统审计与大模型深度剖析，本项目「{projectName || '当前项目'}」共检出 <span className="font-bold text-red-600">{riskData.device + riskData.tech + riskData.economic + riskData.credit}</span> 处高危或中危异常行为指纹，综合判定风险概率为 <span className="font-extrabold text-red-600 font-mono text-sm">{riskPercentage}%</span>。其中，物理硬件标识重合是重度违规迹象，极易在行政及司法核查中被认定为 **视为投标人相互串通投标** 的法定行为，整改合规迫在眉睫。
+                    </p>
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-3">
+                    {/* Item 1 */}
+                    <div className="p-3 bg-white/50 border border-slate-100 rounded-xl space-y-1">
+                      <div className="flex items-center justify-between">
+                        <span className="text-[11px] font-bold text-slate-500">设备同源性检测</span>
+                        <span className={`text-[10px] px-1.5 py-0.5 rounded-full font-bold ${riskData.device > 0 ? 'bg-red-50 text-red-600 border border-red-100' : 'bg-emerald-50 text-emerald-600'}`}>
+                          {riskData.device > 0 ? '高危重合' : '安全无虞'}
+                        </span>
+                      </div>
+                      <p className="text-[11px] text-slate-600 leading-snug">
+                        检出 <span className="font-bold text-slate-800">{riskData.device}</span> 处完全一致的MAC地址与硬盘硬件序列号，在物理设备层面提供了确凿的同源编写证据。
+                      </p>
+                    </div>
+
+                    {/* Item 2 */}
+                    <div className="p-3 bg-white/50 border border-slate-100 rounded-xl space-y-1">
+                      <div className="flex items-center justify-between">
+                        <span className="text-[11px] font-bold text-slate-500">技术标文本抄袭</span>
+                        <span className={`text-[10px] px-1.5 py-0.5 rounded-full font-bold ${riskData.tech > 0 ? 'bg-red-50 text-red-600 border border-red-100' : 'bg-emerald-50 text-emerald-600'}`}>
+                          {riskData.tech > 5 ? '中高度雷同' : '微量重合'}
+                        </span>
+                      </div>
+                      <p className="text-[11px] text-slate-600 leading-snug">
+                        检出 <span className="font-bold text-slate-800">{riskData.tech}</span> 处100%完全重叠的施工或技术方案段落，存在明显的跨标书整段抄袭、套用同一源模板迹象。
+                      </p>
+                    </div>
+
+                    {/* Item 3 */}
+                    <div className="p-3 bg-white/50 border border-slate-100 rounded-xl space-y-1">
+                      <div className="flex items-center justify-between">
+                        <span className="text-[11px] font-bold text-slate-500">经济标锁号校验</span>
+                        <span className={`text-[10px] px-1.5 py-0.5 rounded-full font-bold ${riskData.economic > 0 ? 'bg-red-50 text-red-600 border border-red-100' : 'bg-emerald-50 text-emerald-600'}`}>
+                          {riskData.economic > 0 ? '锁号重合' : '未见异常'}
+                        </span>
+                      </div>
+                      <p className="text-[11px] text-slate-600 leading-snug">
+                        发现相同的计价软件加密狗锁号 <span className="font-bold text-slate-800">({riskData.economic}处)</span>，暗示不同单位的报价标书是由同一把物理加密狗汇算并生成。
+                      </p>
+                    </div>
+
+                    {/* Item 4 */}
+                    <div className="p-3 bg-white/50 border border-slate-100 rounded-xl space-y-1">
+                      <div className="flex items-center justify-between">
+                        <span className="text-[11px] font-bold text-slate-500">资信基本要素雷同</span>
+                        <span className={`text-[10px] px-1.5 py-0.5 rounded-full font-bold ${riskData.credit > 0 ? 'bg-orange-50 text-orange-600 border border-orange-100' : 'bg-emerald-50 text-emerald-600'}`}>
+                          {riskData.credit > 0 ? '交叉混淆' : '正常通过'}
+                        </span>
+                      </div>
+                      <p className="text-[11px] text-slate-600 leading-snug">
+                        发现法人名称、联系方式、往来信用担保等基础数据混淆一致，极可能是由同一编制团队串联起草相关申报材料。
+                      </p>
+                    </div>
+                  </div>
+                </motion.div>
+              ) : (
+                <motion.div 
+                  key="advice"
+                  initial={{ opacity: 0, y: 5 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -5 }}
+                  transition={{ duration: 0.15 }}
+                  className="space-y-4"
+                >
+                  <div className="bg-white/75 p-4 rounded-xl border border-indigo-50/80 shadow-sm space-y-3">
+                    <div className="flex items-center gap-2">
+                      <span className="w-1.5 h-4 bg-indigo-600 rounded" />
+                      <h4 className="text-sm font-bold text-slate-800">紧急合规避雷动作</h4>
+                    </div>
+                    <ul className="text-xs space-y-2.5 text-slate-600">
+                      <li className="flex items-start gap-2">
+                        <span className="w-4 h-4 rounded bg-red-100 text-red-600 flex items-center justify-center font-bold text-[10px] shrink-0 mt-0.5">1</span>
+                        <div>
+                          <strong className="text-slate-800">投标文件必须进行物理编制隔离：</strong>
+                          严禁在同一部办公电脑、同个无线局域网中完成不同投标文件的修改及上传，彻底隔断硬件指纹（MAC和硬盘码）的重复路径。
+                        </div>
+                      </li>
+                      <li className="flex items-start gap-2">
+                        <span className="w-4 h-4 rounded bg-amber-100 text-amber-600 flex items-center justify-center font-bold text-[10px] shrink-0 mt-0.5">2</span>
+                        <div>
+                          <strong className="text-slate-800">一锁一预算，彻底替换经济标加密锁：</strong>
+                          必须重新指派预算人员，在独立的、合法的机器上，搭载各自公司的授权加密锁独立完成套价，重新导出最终的GEF/XML投标文件，覆盖现有异常版本。
+                        </div>
+                      </li>
+                      <li className="flex items-start gap-2">
+                        <span className="w-4 h-4 rounded bg-indigo-100 text-indigo-600 flex items-center justify-center font-bold text-[10px] shrink-0 mt-0.5">3</span>
+                        <div>
+                          <strong className="text-slate-800">技术标方案深度重构：</strong>
+                          对100%相似段落进行手工定制重写，杜绝套用公共模板行为，确保各家施工标准、进度网格 and 质检保障等具备鲜明的排他性特色。
+                        </div>
+                      </li>
+                    </ul>
+                  </div>
+
+                  <div className="p-3 bg-amber-50/50 border border-amber-200/60 rounded-xl flex items-start gap-2">
+                    <AlertCircle className="w-4 h-4 text-amber-600 shrink-0 mt-0.5" />
+                    <div className="text-[10px] text-amber-800 leading-normal">
+                      <strong>合规铁律提示：</strong> 在合规审计阶段，切忌只做字面文字替换。现在的多维指纹识别能够穿透文档内部的元属性（如历史编辑人、文档建立时间等），直接在新物理环境中“干净新建”是最低风险的修正策略。
+                    </div>
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
+
+          <div className="mt-4 pt-4 border-t border-indigo-50/80 flex items-center justify-between text-[11px] text-slate-400 font-medium">
+            <span className="flex items-center gap-1"><Clock className="w-3 h-3" /> 审计分析基于招投标规范 DB11/T 和 AI 语义风控双重模型</span>
+            <span className="text-indigo-600 flex items-center hover:underline cursor-pointer" onClick={handleRediagnose}>重新比对 & 覆盖分析 <ChevronRight className="w-3 h-3" /></span>
+          </div>
+        </div>
+
+        {/* Right Side: Animated AI Robot Mascot Panel */}
+        <div className="lg:col-span-5 p-6 bg-slate-50/80 flex flex-col items-center justify-between min-h-[380px] relative overflow-hidden">
+          
+          {/* Cyber grid decorative background */}
+          <div className="absolute inset-0 bg-[linear-gradient(rgba(99,102,241,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(99,102,241,0.03)_1px,transparent_1px)] bg-[size:16px_16px] pointer-events-none" />
+          
+          {/* Top telemetry line */}
+          <div className="w-full flex items-center justify-between border-b border-slate-200/60 pb-3 z-10">
+            <div className="flex items-center gap-1.5">
+              <Radio className="w-3.5 h-3.5 text-indigo-500 animate-pulse" />
+              <span className="text-xs font-bold text-slate-700">AI 智能风控数字人</span>
+            </div>
+            <span className="flex items-center gap-1 text-[10px] font-mono px-2 py-0.5 rounded bg-indigo-50 border border-indigo-100 text-indigo-700 font-extrabold animate-pulse">
+              <span className="w-1.5 h-1.5 rounded-full bg-indigo-600 animate-ping" />
+              ON-LINE SYSTEM
+            </span>
+          </div>
+
+          {/* AI Mascot & Speech Section */}
+          <div className="flex flex-col items-center justify-center flex-1 w-full gap-5 py-4 z-10">
+            
+            {/* Robot Container with customized floating animation */}
+            <div className="relative flex items-center justify-center">
+              
+              {/* Radar scanner glowing rings */}
+              <div className="absolute w-36 h-36 bg-indigo-100/30 rounded-full border border-indigo-200/50 animate-ping pointer-events-none" style={{ animationDuration: '3s' }} />
+              <div className="absolute w-28 h-28 bg-indigo-50/50 rounded-full border border-indigo-300/30 animate-pulse pointer-events-none" />
+
+              {/* Glowing backlighting */}
+              <div className={`absolute w-16 h-16 rounded-full filter blur-md transition-colors duration-500 ${
+                robotMood === 'analyzing' ? 'bg-indigo-400/40' :
+                robotMood === 'warning' ? 'bg-red-400/30' : 'bg-emerald-400/30'
+              }`} />
+
+              {/* Exquisite SVG Robot */}
+              <motion.div
+                animate={{
+                  y: [0, -10, 0],
+                }}
+                transition={{
+                  duration: 4,
+                  repeat: Infinity,
+                  ease: "easeInOut"
+                }}
+                className="w-24 h-24 relative drop-shadow-xl cursor-pointer"
+                whileHover={{ scale: 1.05 }}
+              >
+                <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-full">
+                  {/* Ears / Antennas */}
+                  <motion.rect 
+                    x="10" y="38" width="6" height="12" rx="3" 
+                    fill="#818CF8" 
+                    animate={{ height: robotMood === 'analyzing' ? [12, 18, 12] : 12 }}
+                    transition={{ repeat: Infinity, duration: 1 }}
+                  />
+                  <motion.rect 
+                    x="84" y="38" width="6" height="12" rx="3" 
+                    fill="#818CF8"
+                    animate={{ height: robotMood === 'analyzing' ? [12, 18, 12] : 12 }}
+                    transition={{ repeat: Infinity, duration: 1, delay: 0.3 }}
+                  />
+
+                  {/* Antenna pole on top */}
+                  <rect x="47" y="10" width="6" height="14" fill="#6366F1" />
+                  {/* Glowing Ball on Antenna */}
+                  <motion.circle 
+                    cx="50" cy="8" r="6" 
+                    fill={robotMood === 'warning' ? '#EF4444' : robotMood === 'analyzing' ? '#6366F1' : '#10B981'}
+                    animate={{
+                      scale: [1, 1.3, 1],
+                      opacity: [0.8, 1, 0.8]
+                    }}
+                    transition={{ repeat: Infinity, duration: 1.5 }}
+                  />
+
+                  {/* Robot Head Body */}
+                  <rect x="20" y="24" width="60" height="50" rx="16" fill="#4F46E5" stroke="#312E81" strokeWidth="4" />
+                  
+                  {/* Inside Screen Mask */}
+                  <rect x="26" y="30" width="48" height="30" rx="8" fill="#1E1B4B" />
+
+                  {/* Face Expression Screen */}
+                  <AnimatePresence mode="wait">
+                    {robotMood === 'analyzing' ? (
+                      /* Analyzing Radar / Dials */
+                      <motion.g 
+                        key="analyzing"
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                      >
+                        {/* Scanning grid bar */}
+                        <motion.line 
+                          x1="26" y1="30" x2="74" y2="30" 
+                          stroke="#818CF8" strokeWidth="2" 
+                          animate={{ y: [32, 58, 32] }}
+                          transition={{ repeat: Infinity, duration: 1.5 }}
+                        />
+                        {/* Two futuristic data rings */}
+                        <circle cx="38" cy="45" r="4" stroke="#818CF8" strokeWidth="1.5" strokeDasharray="3 3" className="animate-spin" style={{ transformOrigin: '38px 45px' }} />
+                        <circle cx="62" cy="45" r="4" stroke="#818CF8" strokeWidth="1.5" strokeDasharray="3 3" className="animate-spin" style={{ transformOrigin: '62px 45px', animationDirection: 'reverse' }} />
+                      </motion.g>
+                    ) : robotMood === 'warning' ? (
+                      /* Warning / Serious Eyes */
+                      <motion.g 
+                        key="warning"
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                      >
+                        {/* Angled Serious Eyes */}
+                        <path d="M 32 40 L 44 45 M 32 40" stroke="#EF4444" strokeWidth="3" strokeLinecap="round" />
+                        <path d="M 68 40 L 56 45 M 68 40" stroke="#EF4444" strokeWidth="3" strokeLinecap="round" />
+                        <circle cx="38" cy="48" r="3.5" fill="#EF4444" className="animate-pulse" />
+                        <circle cx="62" cy="48" r="3.5" fill="#EF4444" className="animate-pulse" />
+                        {/* Wavy warning screen smile */}
+                        <path d="M 44 54 Q 50 50 56 54" stroke="#EF4444" strokeWidth="2" fill="none" strokeLinecap="round" />
+                      </motion.g>
+                    ) : (
+                      /* Helpful / Friendly Eyes */
+                      <motion.g 
+                        key="helpful"
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                      >
+                        {/* Cute Arching eyes */}
+                        <path d="M 32 46 Q 38 40 44 46" stroke="#10B981" strokeWidth="3.5" fill="none" strokeLinecap="round" />
+                        <path d="M 56 46 Q 62 40 68 46" stroke="#10B981" strokeWidth="3.5" fill="none" strokeLinecap="round" />
+                        {/* Smile mouth */}
+                        <path d="M 42 54 Q 50 59 58 54" stroke="#10B981" strokeWidth="2" fill="none" strokeLinecap="round" />
+                      </motion.g>
+                    )}
+                  </AnimatePresence>
+
+                  {/* Collar/Neck connector */}
+                  <rect x="42" y="74" width="16" height="8" rx="2" fill="#312E81" />
+
+                  {/* Body/Shoulders visible below */}
+                  <path d="M 30 82 L 70 82 L 75 92 L 25 92 Z" fill="#4F46E5" stroke="#312E81" strokeWidth="3" />
+                  {/* Chest Emblem Core */}
+                  <motion.circle 
+                    cx="50" cy="87" r="4" 
+                    fill={robotMood === 'warning' ? '#FEE2E2' : '#D1FAE5'} 
+                    animate={{ opacity: [0.6, 1, 0.6] }}
+                    transition={{ repeat: Infinity, duration: 1 }}
+                  />
+                </svg>
+              </motion.div>
+            </div>
+
+            {/* Smart Speeches bubble */}
+            <div className="w-full space-y-3 font-sans">
+              <AnimatePresence mode="wait">
+                <motion.div
+                  key={activeTab + (isDiagnosing ? 'diag' : '')}
+                  initial={{ opacity: 0, scale: 0.95, y: 10 }}
+                  animate={{ opacity: 1, scale: 1, y: 0 }}
+                  exit={{ opacity: 0, scale: 0.95, y: -10 }}
+                  className={`p-4 rounded-2xl border relative flex flex-col justify-between shadow-sm min-h-[110px] ${
+                    isDiagnosing ? 'bg-indigo-500/10 border-indigo-400/30 animate-pulse' :
+                    activeTab === 'conclusion' ? 'bg-rose-500/10 border-rose-400/30 text-slate-800' :
+                    'bg-emerald-500/10 border-emerald-400/30 text-slate-800'
+                  }`}
+                >
+                  {/* Speaking triangle tail arrow pointing up to the robot */}
+                  <div className={`absolute top-0 left-1/2 -translate-x-1/2 -translate-y-2 w-0 h-0 border-8 border-transparent border-b-current ${
+                    isDiagnosing ? 'text-indigo-50/80' :
+                    activeTab === 'conclusion' ? 'text-rose-50/80' : 'text-emerald-50/80'
+                  }`} style={{ color: isDiagnosing ? '#EEF2FF' : activeTab === 'conclusion' ? '#FFF1F2' : '#ECFDF5' }} />
+
+                  <div>
+                    <div className="flex items-center gap-1.5 mb-1 text-[11px] font-bold">
+                      <span className={`w-1.5 h-1.5 rounded-full ${isDiagnosing ? 'bg-indigo-500 animate-ping' : activeTab === 'conclusion' ? 'bg-red-500 animate-ping' : 'bg-emerald-500 animate-ping'}`} />
+                      <span className={isDiagnosing ? 'text-indigo-700' : activeTab === 'conclusion' ? 'text-red-700' : 'text-emerald-700'}>
+                        【{speech.tag}】
+                      </span>
+                    </div>
+                    <p className="text-xs leading-relaxed text-slate-600 font-medium">
+                      {speech.text}
+                    </p>
+                  </div>
+
+                  <div className="flex items-center justify-between mt-3.5 pt-2 border-t border-slate-200/50 text-[10px] text-slate-400 font-semibold">
+                    <span className="flex items-center gap-1">
+                      <Zap className={`w-3 h-3 ${activeTab === 'conclusion' ? 'text-amber-500' : 'text-emerald-500'}`} />
+                      {speech.alert}
+                    </span>
+                    <span>AI助理风控评级：V2.5</span>
+                  </div>
+                </motion.div>
+              </AnimatePresence>
+            </div>
+
+          </div>
+
+          {/* Bottom telemetry widgets */}
+          <div className="w-full grid grid-cols-3 gap-2 border-t border-slate-200/60 pt-3 text-center text-[10px] text-slate-500 font-medium z-10">
+            <div className="flex flex-col bg-white/60 p-1.5 rounded-lg border border-slate-100/80">
+              <span className="text-slate-400">词法查重深度</span>
+              <span className="font-bold text-slate-700 font-mono mt-0.5">NLP 12层</span>
+            </div>
+            <div className="flex flex-col bg-white/60 p-1.5 rounded-lg border border-slate-100/80">
+              <span className="text-slate-400">穿透性硬件审计</span>
+              <span className="font-bold text-slate-700 font-mono mt-0.5">MAC / HD</span>
+            </div>
+            <div className="flex flex-col bg-white/60 p-1.5 rounded-lg border border-slate-100/80">
+              <span className="text-slate-400">合规审计基准</span>
+              <span className="font-bold text-slate-700 font-mono mt-0.5">DB11 V2026</span>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+    </div>
+  );
+}
