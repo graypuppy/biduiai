@@ -4,9 +4,6 @@ import {
   Sparkles, 
   ShieldAlert, 
   Wand2, 
-  RefreshCw, 
-  Copy, 
-  CheckCircle2, 
   ChevronRight, 
   AlertCircle,
   Clock,
@@ -34,50 +31,19 @@ export default function AiDiagnosisCard({
   riskData
 }: AiDiagnosisCardProps) {
   const [activeTab, setActiveTab] = useState<'conclusion' | 'advice'>('conclusion');
-  const [isDiagnosing, setIsDiagnosing] = useState(false);
-  const [copied, setCopied] = useState(false);
   const [robotMood, setRobotMood] = useState<'analyzing' | 'warning' | 'helpful'>('warning');
 
   // Sync robot mood with tab changes or actions
   useEffect(() => {
-    if (isDiagnosing) {
-      setRobotMood('analyzing');
-    } else if (activeTab === 'conclusion') {
+    if (activeTab === 'conclusion') {
       setRobotMood('warning');
     } else {
       setRobotMood('helpful');
     }
-  }, [activeTab, isDiagnosing]);
-
-  // Simulate Diagnose Re-run
-  const handleRediagnose = () => {
-    setIsDiagnosing(true);
-    setTimeout(() => {
-      setIsDiagnosing(false);
-    }, 1500);
-  };
-
-  const handleCopy = () => {
-    const textToCopy = `【比对结果 AI 智能诊断报告】\n项目名称：${projectName}\n风险级别：${riskLevel} (${riskPercentage}%)\n\n[AI诊断结论]\n${
-      riskPercentage >= 70 
-        ? "经系统穿透性审计，本项目包含极其严重的“串通投标”核心违规指纹。多家投标人在投标文件编写设备指纹、经济标计价软件锁号等底层信息上完全重合，属于《招标投标法》中明确规定的视为串标情形。"
-        : "经系统审计，本项目目前属于中低度违规风险，但发现个别招标文件作者元数据及部分次要段落存在较高雷同，请重点关注技术方案模板的使用合规性。"
-    }\n\n[关键风险拆解]\n- 物理指纹同源性：发现 ${riskData.device} 处完全重叠的 MAC 硬件地址与硬盘序列号。\n- 编写行为一致性：技术标存在 ${riskData.tech} 处 100% 相似重合段落。\n- 报价计价工具一致：经济标存在 ${riskData.economic} 处共用广联达计价加密锁异常。`;
-    
-    navigator.clipboard.writeText(textToCopy);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
-  };
+  }, [activeTab]);
 
   // Robot speech context
   const getRobotSpeech = () => {
-    if (isDiagnosing) {
-      return {
-        tag: "系统重组中",
-        text: "正在接入招投标合规法规库与语义大模型，对当前标书进行全量数字指纹还原和碰撞诊断，请稍等...",
-        alert: "AI 审计核心：全速运行中"
-      };
-    }
     if (activeTab === 'conclusion') {
       return {
         tag: "雷达合规预警",
@@ -117,33 +83,6 @@ export default function AiDiagnosisCard({
             </div>
             <p className="text-xs text-slate-500 mt-1">基于大模型与招投标合规审计规则，进行穿透式风险研判与防范处置分析</p>
           </div>
-        </div>
-        
-        <div className="flex items-center gap-2">
-          <button 
-            onClick={handleRediagnose}
-            disabled={isDiagnosing}
-            className="px-3.5 py-1.5 bg-white border border-slate-200 hover:border-indigo-200 rounded-lg text-slate-600 hover:text-indigo-600 text-xs font-semibold shadow-sm transition-all flex items-center gap-1.5 disabled:opacity-50"
-          >
-            <RefreshCw className={`w-3.5 h-3.5 ${isDiagnosing ? 'animate-spin text-indigo-600' : ''}`} />
-            {isDiagnosing ? '诊断刷新中...' : '重新诊断'}
-          </button>
-          <button 
-            onClick={handleCopy}
-            className="px-3.5 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg text-xs font-semibold shadow-sm transition-all flex items-center gap-1.5"
-          >
-            {copied ? (
-              <>
-                <CheckCircle2 className="w-3.5 h-3.5" />
-                <span>已复制诊断结果</span>
-              </>
-            ) : (
-              <>
-                <Copy className="w-3.5 h-3.5" />
-                <span>一键复制诊断意见</span>
-              </>
-            )}
-          </button>
         </div>
       </div>
 
@@ -297,7 +236,6 @@ export default function AiDiagnosisCard({
 
           <div className="mt-4 pt-4 border-t border-indigo-50/80 flex items-center justify-between text-[11px] text-slate-400 font-medium">
             <span className="flex items-center gap-1"><Clock className="w-3 h-3" /> 审计分析基于招投标规范 DB11/T 和 AI 语义风控双重模型</span>
-            <span className="text-indigo-600 flex items-center hover:underline cursor-pointer" onClick={handleRediagnose}>重新比对 & 覆盖分析 <ChevronRight className="w-3 h-3" /></span>
           </div>
         </div>
 
@@ -518,26 +456,24 @@ export default function AiDiagnosisCard({
             <div className="w-full space-y-3 font-sans">
               <AnimatePresence mode="wait">
                 <motion.div
-                  key={activeTab + (isDiagnosing ? 'diag' : '')}
+                  key={activeTab}
                   initial={{ opacity: 0, scale: 0.95, y: 10 }}
                   animate={{ opacity: 1, scale: 1, y: 0 }}
                   exit={{ opacity: 0, scale: 0.95, y: -10 }}
                   className={`p-4 rounded-2xl border relative flex flex-col justify-between shadow-sm min-h-[110px] ${
-                    isDiagnosing ? 'bg-indigo-500/10 border-indigo-400/30 animate-pulse' :
                     activeTab === 'conclusion' ? 'bg-rose-500/10 border-rose-400/30 text-slate-800' :
                     'bg-emerald-500/10 border-emerald-400/30 text-slate-800'
                   }`}
                 >
                   {/* Speaking triangle tail arrow pointing up to the robot */}
                   <div className={`absolute top-0 left-1/2 -translate-x-1/2 -translate-y-2 w-0 h-0 border-8 border-transparent border-b-current ${
-                    isDiagnosing ? 'text-indigo-50/80' :
                     activeTab === 'conclusion' ? 'text-rose-50/80' : 'text-emerald-50/80'
-                  }`} style={{ color: isDiagnosing ? '#EEF2FF' : activeTab === 'conclusion' ? '#FFF1F2' : '#ECFDF5' }} />
+                  }`} style={{ color: activeTab === 'conclusion' ? '#FFF1F2' : '#ECFDF5' }} />
 
                   <div>
                     <div className="flex items-center gap-1.5 mb-1 text-[11px] font-bold">
-                      <span className={`w-1.5 h-1.5 rounded-full ${isDiagnosing ? 'bg-indigo-500 animate-ping' : activeTab === 'conclusion' ? 'bg-red-500 animate-ping' : 'bg-emerald-500 animate-ping'}`} />
-                      <span className={isDiagnosing ? 'text-indigo-700' : activeTab === 'conclusion' ? 'text-red-700' : 'text-emerald-700'}>
+                      <span className={`w-1.5 h-1.5 rounded-full ${activeTab === 'conclusion' ? 'bg-red-500 animate-ping' : 'bg-emerald-500 animate-ping'}`} />
+                      <span className={activeTab === 'conclusion' ? 'text-red-700' : 'text-emerald-700'}>
                         【{speech.tag}】
                       </span>
                     </div>
