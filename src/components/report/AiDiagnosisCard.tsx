@@ -335,119 +335,181 @@ export default function AiDiagnosisCard({
                 robotMood === 'warning' ? 'bg-red-400/30' : 'bg-emerald-400/30'
               }`} />
 
-              {/* Exquisite SVG Robot */}
+              {/* Exquisite SVG "云保标" Cloud Robot Mascot */}
               <motion.div
                 animate={{
-                  y: [0, -10, 0],
+                  y: [0, -8, 0],
                 }}
                 transition={{
                   duration: 4,
                   repeat: Infinity,
                   ease: "easeInOut"
                 }}
-                className="w-24 h-24 relative drop-shadow-xl cursor-pointer"
+                className="w-40 h-40 relative drop-shadow-2xl cursor-pointer"
                 whileHover={{ scale: 1.05 }}
               >
                 <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-full">
-                  {/* Ears / Antennas */}
-                  <motion.rect 
-                    x="10" y="38" width="6" height="12" rx="3" 
-                    fill="#818CF8" 
-                    animate={{ height: robotMood === 'analyzing' ? [12, 18, 12] : 12 }}
-                    transition={{ repeat: Infinity, duration: 1 }}
-                  />
-                  <motion.rect 
-                    x="84" y="38" width="6" height="12" rx="3" 
-                    fill="#818CF8"
-                    animate={{ height: robotMood === 'analyzing' ? [12, 18, 12] : 12 }}
-                    transition={{ repeat: Infinity, duration: 1, delay: 0.3 }}
-                  />
+                  <defs>
+                    <linearGradient id="cloudGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+                      <stop offset="0%" stopColor="#FFFFFF" />
+                      <stop offset="100%" stopColor="#E2E8F0" />
+                    </linearGradient>
+                    <linearGradient id="shieldGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+                      <stop offset="0%" stopColor="#EF4444" />
+                      <stop offset="100%" stopColor="#B91C1C" />
+                    </linearGradient>
+                  </defs>
 
-                  {/* Antenna pole on top */}
-                  <rect x="47" y="10" width="6" height="14" fill="#6366F1" />
-                  {/* Glowing Ball on Antenna */}
-                  <motion.circle 
-                    cx="50" cy="8" r="6" 
-                    fill={robotMood === 'warning' ? '#EF4444' : robotMood === 'analyzing' ? '#6366F1' : '#10B981'}
-                    animate={{
-                      scale: [1, 1.3, 1],
-                      opacity: [0.8, 1, 0.8]
-                    }}
-                    transition={{ repeat: Infinity, duration: 1.5 }}
-                  />
+                  {/* Background Soft Glow */}
+                  <circle cx="50" cy="40" r="22" fill="#FEE2E2" opacity="0.35" filter="blur(3px)" />
 
-                  {/* Robot Head Body */}
-                  <rect x="20" y="24" width="60" height="50" rx="16" fill="#4F46E5" stroke="#312E81" strokeWidth="4" />
-                  
-                  {/* Inside Screen Mask */}
-                  <rect x="26" y="30" width="48" height="30" rx="8" fill="#1E1B4B" />
+                  {/* Floating Left Document */}
+                  <motion.g
+                    animate={{ y: [0, -2, 0], rotate: [-15, -12, -15] }}
+                    transition={{ repeat: Infinity, duration: 3, ease: "easeInOut" }}
+                  >
+                    <path d="M 8 16 L 18 13 C 19 13, 19.5 13.5, 19.5 14 L 17 28 C 17 28.5, 16.5 29, 16 29 L 6 32 C 5.5 32, 5 31.5, 5 31 L 7.5 17 C 7.5 16.5, 8 16, 8 16 Z" fill="#FFFFFF" stroke="#FCA5A5" strokeWidth="0.5" />
+                    <text x="12" y="21.5" fill="#EF4444" fontSize="2.2" fontWeight="bold" transform="rotate(-15, 12, 21.5)" textAnchor="middle">标书</text>
+                    <line x1="8" y1="23.5" x2="15" y2="21.5" stroke="#F87171" strokeWidth="0.4" opacity="0.5" />
+                    <line x1="7.5" y1="25.5" x2="14" y2="23.5" stroke="#F87171" strokeWidth="0.4" opacity="0.5" />
+                    <line x1="7" y1="27.5" x2="12.5" y2="25.5" stroke="#F87171" strokeWidth="0.4" opacity="0.5" />
+                  </motion.g>
 
-                  {/* Face Expression Screen */}
+                  {/* Floating Right Document */}
+                  <motion.g
+                    animate={{ y: [0, 2, 0], rotate: [12, 15, 12] }}
+                    transition={{ repeat: Infinity, duration: 3.5, ease: "easeInOut", delay: 0.5 }}
+                  >
+                    <path d="M 82 15 L 92 18 C 92.5 18, 93 18.5, 93 19 L 90 33 C 90 33.5, 89.5 34, 89 34 L 79 31 C 78.5 31, 78 30.5, 78 30 L 81 16 C 81 15.5, 81.5 15, 82 15 Z" fill="#FFFFFF" stroke="#FCA5A5" strokeWidth="0.5" />
+                    <circle cx="86" cy="22" r="2" fill="none" stroke="#EF4444" strokeWidth="0.6" />
+                    <path d="M 86 22 L 86 20 A 2 2 0 0 1 88 22 Z" fill="#EF4444" />
+                    <line x1="81" y1="26" x2="89" y2="28" stroke="#F87171" strokeWidth="0.4" opacity="0.5" />
+                    <line x1="80.5" y1="28" x2="87" y2="30" stroke="#F87171" strokeWidth="0.4" opacity="0.5" />
+                  </motion.g>
+
+                  {/* Outer Floating Red/Pink Ring */}
+                  <motion.g
+                    animate={{ rotate: 360 }}
+                    transition={{ repeat: Infinity, duration: 15, ease: "linear" }}
+                    style={{ transformOrigin: '50px 54px' }}
+                  >
+                    <ellipse cx="50" cy="54" rx="46" ry="6" fill="none" stroke="#FCA5A5" strokeWidth="0.8" opacity="0.4" strokeDasharray="3 2" />
+                  </motion.g>
+
+                  {/* Symmetrical Ears/Headphones */}
+                  <rect x="22" y="29" width="4" height="10" rx="2" fill="#EF4444" stroke="#DC2626" strokeWidth="0.4" />
+                  <circle cx="24" cy="34" r="1.5" fill="#FFFFFF" />
+
+                  <rect x="74" y="29" width="4" height="10" rx="2" fill="#EF4444" stroke="#DC2626" strokeWidth="0.4" />
+                  <circle cx="76" cy="34" r="1.5" fill="#FFFFFF" />
+
+                  {/* The Cloud Head (Mascot Body) */}
+                  <path d="M 32 46 
+                           C 24 46, 22 36, 30 32 
+                           C 28 20, 42 16, 50 21 
+                           C 58 16, 72 20, 70 32 
+                           C 78 36, 76 46, 68 46 
+                           Z" 
+                        fill="url(#cloudGrad)" stroke="#CBD5E1" strokeWidth="0.8" />
+
+                  {/* Circular Forehead Logo with stylised "云" */}
+                  <circle cx="50" cy="22" r="5.5" fill="#EF4444" />
+                  <path d="M 47.5 20.2 L 52.5 20.2 M 46.8 22 L 53.2 22 M 50 22 L 50 24.2 Q 50 25.5, 52 25" stroke="#FFFFFF" strokeWidth="0.8" fill="none" strokeLinecap="round" />
+
+                  {/* Black Digital Screen Face */}
+                  <rect x="33" y="28" width="34" height="18" rx="8" fill="#1E293B" stroke="#F1F5F9" strokeWidth="1" />
+                  <rect x="34.5" y="29.5" width="31" height="15" rx="6.5" fill="#0F172A" />
+
+                  {/* Symmetrical Arms */}
+                  <path d="M 33 41 Q 38 46, 43 45" stroke="#FFFFFF" strokeWidth="4.5" strokeLinecap="round" fill="none" />
+                  <path d="M 67 41 Q 62 46, 57 45" stroke="#FFFFFF" strokeWidth="4.5" strokeLinecap="round" fill="none" />
+                  <circle cx="43" cy="45" r="2.2" fill="#475569" />
+                  <circle cx="57" cy="45" r="2.2" fill="#475569" />
+
+                  {/* Symmetrical Red Shield with white border and a white Checkmark */}
+                  <g>
+                    <path d="M 41 42 Q 50 44, 59 42 C 59 51, 55 57, 50 61 C 45 57, 41 51, 41 42 Z" fill="#FCA5A5" opacity="0.3" />
+                    <path d="M 42 41 Q 50 43, 58 41 C 58 50, 54 56, 50 60 C 46 56, 42 50, 42 41 Z" fill="url(#shieldGrad)" stroke="#FEE2E2" strokeWidth="0.8" />
+                    <path d="M 44 43 Q 50 44.5, 56 43 C 56 49, 53 54, 50 57.5 C 47 54, 44 49, 44 43 Z" fill="none" stroke="#FFFFFF" strokeWidth="0.8" opacity="0.8" />
+                    <path d="M 47 49 L 49.2 51.5 L 53.5 46.5" stroke="#FFFFFF" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" fill="none" />
+                  </g>
+
+                  {/* Symmetrical 3D Platform Base */}
+                  <g>
+                    {/* Base Shadows and depth */}
+                    <ellipse cx="50" cy="88" rx="42" ry="10" fill="#DC2626" />
+                    <rect x="8" y="88" width="84" height="4" fill="#DC2626" />
+                    <ellipse cx="50" cy="92" rx="42" ry="10" fill="#991B1B" />
+
+                    {/* Base White top cap */}
+                    <ellipse cx="50" cy="85" rx="39" ry="8" fill="#FFFFFF" stroke="#EF4444" strokeWidth="1" />
+
+                    {/* Big red text title: 云保标 */}
+                    <text x="50" y="80.5" fill="#EF4444" fontSize="10.5" fontWeight="900" textAnchor="middle" style={{ letterSpacing: '1px', fontFamily: 'system-ui, -apple-system, sans-serif' }}>
+                      云保标
+                    </text>
+
+                    {/* Ribbon slogan: 标书查重 · 安心投标 */}
+                    <rect x="25" y="85" width="50" height="7" rx="3.5" fill="#EF4444" />
+                    <text x="50" y="90" fill="#FFFFFF" fontSize="3" fontWeight="bold" textAnchor="middle" style={{ letterSpacing: '0.4px', fontFamily: 'system-ui, -apple-system, sans-serif' }}>
+                      标书查重 · 安心投标
+                    </text>
+                  </g>
+
+                  {/* Face Expression Screen inside the digital visor */}
                   <AnimatePresence mode="wait">
                     {robotMood === 'analyzing' ? (
-                      /* Analyzing Radar / Dials */
+                      /* Analyzing / Scanning State */
                       <motion.g 
                         key="analyzing"
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
                         exit={{ opacity: 0 }}
                       >
-                        {/* Scanning grid bar */}
+                        {/* Orange scan grid line */}
                         <motion.line 
-                          x1="26" y1="30" x2="74" y2="30" 
-                          stroke="#818CF8" strokeWidth="2" 
-                          animate={{ y: [32, 58, 32] }}
-                          transition={{ repeat: Infinity, duration: 1.5 }}
+                          x1="34" y1="29.5" x2="66" y2="29.5" 
+                          stroke="#F97316" strokeWidth="1" 
+                          animate={{ y: [30.5, 43.5, 30.5] }}
+                          transition={{ repeat: Infinity, duration: 1.5, ease: "linear" }}
                         />
-                        {/* Two futuristic data rings */}
-                        <circle cx="38" cy="45" r="4" stroke="#818CF8" strokeWidth="1.5" strokeDasharray="3 3" className="animate-spin" style={{ transformOrigin: '38px 45px' }} />
-                        <circle cx="62" cy="45" r="4" stroke="#818CF8" strokeWidth="1.5" strokeDasharray="3 3" className="animate-spin" style={{ transformOrigin: '62px 45px', animationDirection: 'reverse' }} />
+                        {/* Scanning eye-indicators */}
+                        <circle cx="42.5" cy="37" r="2.5" stroke="#F97316" strokeWidth="1" fill="none" strokeDasharray="1.5 1" className="animate-spin" style={{ transformOrigin: '42.5px 37px' }} />
+                        <circle cx="57.5" cy="37" r="2.5" stroke="#F97316" strokeWidth="1" fill="none" strokeDasharray="1.5 1" className="animate-spin" style={{ transformOrigin: '57.5px 37px', animationDirection: 'reverse' }} />
+                        <path d="M 48 41.5 L 52 41.5" stroke="#F97316" strokeWidth="1" strokeLinecap="round" />
                       </motion.g>
                     ) : robotMood === 'warning' ? (
-                      /* Warning / Serious Eyes */
+                      /* Warning / Critical State */
                       <motion.g 
                         key="warning"
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
                         exit={{ opacity: 0 }}
                       >
-                        {/* Angled Serious Eyes */}
-                        <path d="M 32 40 L 44 45 M 32 40" stroke="#EF4444" strokeWidth="3" strokeLinecap="round" />
-                        <path d="M 68 40 L 56 45 M 68 40" stroke="#EF4444" strokeWidth="3" strokeLinecap="round" />
-                        <circle cx="38" cy="48" r="3.5" fill="#EF4444" className="animate-pulse" />
-                        <circle cx="62" cy="48" r="3.5" fill="#EF4444" className="animate-pulse" />
-                        {/* Wavy warning screen smile */}
-                        <path d="M 44 54 Q 50 50 56 54" stroke="#EF4444" strokeWidth="2" fill="none" strokeLinecap="round" />
+                        {/* Serious tilted eyes and glowing pulses */}
+                        <path d="M 37 36 L 44 38.5" stroke="#EF4444" strokeWidth="2.2" strokeLinecap="round" />
+                        <path d="M 63 36 L 56 38.5" stroke="#EF4444" strokeWidth="2.2" strokeLinecap="round" />
+                        <circle cx="41.5" cy="41" r="1.5" fill="#EF4444" className="animate-pulse" />
+                        <circle cx="58.5" cy="41" r="1.5" fill="#EF4444" className="animate-pulse" />
+                        {/* Flat serious mouth */}
+                        <path d="M 47 43.5 Q 50 41.5, 53 43.5" stroke="#EF4444" strokeWidth="1.2" fill="none" strokeLinecap="round" />
                       </motion.g>
                     ) : (
-                      /* Helpful / Friendly Eyes */
+                      /* Helpful / Friendly Cute State (Matches the uploaded picture perfectly) */
                       <motion.g 
                         key="helpful"
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
                         exit={{ opacity: 0 }}
                       >
-                        {/* Cute Arching eyes */}
-                        <path d="M 32 46 Q 38 40 44 46" stroke="#10B981" strokeWidth="3.5" fill="none" strokeLinecap="round" />
-                        <path d="M 56 46 Q 62 40 68 46" stroke="#10B981" strokeWidth="3.5" fill="none" strokeLinecap="round" />
-                        {/* Smile mouth */}
-                        <path d="M 42 54 Q 50 59 58 54" stroke="#10B981" strokeWidth="2" fill="none" strokeLinecap="round" />
+                        {/* Friendly Arching Eyes "∩ ∩" */}
+                        <path d="M 38 39 Q 41.5 34.5, 45 39" stroke="#F97316" strokeWidth="2.5" fill="none" strokeLinecap="round" />
+                        <path d="M 55 39 Q 58.5 34.5, 62 39" stroke="#F97316" strokeWidth="2.5" fill="none" strokeLinecap="round" />
+                        {/* Smiling mouth */}
+                        <path d="M 47.5 42 Q 50 44, 52.5 42" stroke="#F97316" strokeWidth="1.5" fill="none" strokeLinecap="round" />
                       </motion.g>
                     )}
                   </AnimatePresence>
-
-                  {/* Collar/Neck connector */}
-                  <rect x="42" y="74" width="16" height="8" rx="2" fill="#312E81" />
-
-                  {/* Body/Shoulders visible below */}
-                  <path d="M 30 82 L 70 82 L 75 92 L 25 92 Z" fill="#4F46E5" stroke="#312E81" strokeWidth="3" />
-                  {/* Chest Emblem Core */}
-                  <motion.circle 
-                    cx="50" cy="87" r="4" 
-                    fill={robotMood === 'warning' ? '#FEE2E2' : '#D1FAE5'} 
-                    animate={{ opacity: [0.6, 1, 0.6] }}
-                    transition={{ repeat: Infinity, duration: 1 }}
-                  />
                 </svg>
               </motion.div>
             </div>

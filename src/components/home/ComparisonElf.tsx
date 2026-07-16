@@ -36,9 +36,9 @@ export default function ComparisonElf() {
   const functionItems: InfoItem[] = [
     {
       id: 'fun-1',
-      title: '资信标比对',
-      shortDesc: '深度比对代表、身份证及关键资质',
-      fullSpeech: '哇哈！我是最严厉的审计官！我会帮您穿透核对法人、核心技术人员的身份证、手机、邮箱、业绩甚至盖章及引用等细节。任何复制、改字、编造的行为，一秒就被我抓住啦！',
+      title: '资信标信息重复，人工查重形同虚设',
+      shortDesc: '关键人员信息分散，人工核对百页文件极易遗漏',
+      fullSpeech: '项目负责人、技术负责人、安全员等关键人员信息分散在投标文件的各个章节，不同版本之间人员姓名、证件号、资质编号等是否重复或冲突，靠人眼在几百页文件里逐一比对，几乎不可能做到无遗漏。',
       icon: <Clock className="w-5 h-5" />,
       colorClass: 'text-blue-600',
       bgClass: 'bg-blue-50/70',
@@ -48,9 +48,9 @@ export default function ComparisonElf() {
     },
     {
       id: 'fun-2',
-      title: '技术标比对',
-      shortDesc: 'AI语义分析，看破文字洗稿与图表拼凑',
-      fullSpeech: '看我的！基于先进的NLP大语言模型语义对齐技术，不仅能精确查找相同的词句，还能看懂段落的实际内涵！表格、图纸和图片里的文字(OCR)也能关联核对，不管怎么调换语序、润色洗稿我都一眼识破！',
+      title: '技术标内容雷同，隐患藏在细节里',
+      shortDesc: '篇幅长相似度高，细微改动易忽略导致前后矛盾',
+      fullSpeech: '施工方案、质量保证措施、安全文明施工等技术标内容篇幅长、表述相似度高，不同版本之间的细微改动容易被忽略，一旦核心章节出现未同步修改或前后矛盾，评标专家一眼就能发现。',
       icon: <FileSearch className="w-5 h-5" />,
       colorClass: 'text-emerald-600',
       bgClass: 'bg-emerald-50/70',
@@ -60,9 +60,9 @@ export default function ComparisonElf() {
     },
     {
       id: 'fun-3',
-      title: '经济标比对',
-      shortDesc: '清单报价与定额子目，一键异常分析',
-      fullSpeech: '哼哼，算账也是我的拿手好戏！项目属性差异、定额子目对齐、不平衡报价预警，还有人材机汇总偏差。我能在瞬息之间完成上万行清单的比对分析，把造价陷阱全部给您标出来！',
+      title: '经济标报价变动多，差异点难以穷尽',
+      shortDesc: '调整项多且分散，人工核对极易漏掉关键偏差',
+      fullSpeech: '工程量清单的单价、合价、暂估价、规费税率等调整项多且分散，某一条清单项的微调可能影响整体报价逻辑，人工核对既慢又容易漏掉关键偏差，而报价错误直接拉低评标得分。',
       icon: <Fingerprint className="w-5 h-5" />,
       colorClass: 'text-amber-600',
       bgClass: 'bg-amber-50/70',
@@ -72,9 +72,9 @@ export default function ComparisonElf() {
     },
     {
       id: 'fun-4',
-      title: '文件设备特征比对',
-      shortDesc: '穿透式提取MAC、硬盘序列号硬件指纹',
-      fullSpeech: '别想瞒天过海！有些作弊者会假装是不同人写的标书，但只要是在同一台电脑制作的，其MAC地址、硬盘/CPU序列号、Office元数据属性等设备基因就会一模一样！我可以直接穿透硬件底层，揪出“代写”与“串标”铁证！',
+      title: '设备特征码、文件属性等底层信息无从察觉',
+      shortDesc: '隐藏属性肉眼难辨，开标后暴露为时已晚',
+      fullSpeech: '不同版本文件若在同一台电脑上编辑，设备型号编码、文件创建时间、修改作者等隐藏属性完全一致，肉眼和常规查重软件根本无法识别，这类深层信息直到开标后被系统检测才暴露，为时已晚。',
       icon: <Cpu className="w-5 h-5" />,
       colorClass: 'text-purple-600',
       bgClass: 'bg-purple-50/70',
@@ -87,9 +87,9 @@ export default function ComparisonElf() {
   const valueItems: InfoItem[] = [
     {
       id: 'val-1',
-      title: '极致增效',
-      shortDesc: '繁重比对几分钟搞定，省下95%精力',
-      fullSpeech: '专家看几十万字标书看到老花眼？现在交给我这个机灵鬼，一键上传、全流程自动比对，以往需要数天的工作量，我几分钟就能完成，而且完全不会疲倦！',
+      title: '几分钟替代几小时人工比对',
+      shortDesc: '压缩比对时间，释放核心人力',
+      fullSpeech: '投标团队动辄花半天甚至一天逐页核对多版本文件，云保标自动完成31项交叉检测，将比对时间压缩到分钟级，释放人力去做更有价值的投标策略工作。',
       icon: <Zap className="w-5 h-5" />,
       colorClass: 'text-orange-600',
       bgClass: 'bg-orange-50/70',
@@ -99,9 +99,9 @@ export default function ComparisonElf() {
     },
     {
       id: 'val-2',
-      title: '语义防线',
-      shortDesc: '同义词、洗稿等高级伪装无处遁形',
-      fullSpeech: '传统字句比对容易被一两个“标点符号”或者“同义词替换”蒙混过关。而我懂得理解前后文！哪怕是高级的改写、拼接，也逃不过我的AI雷达！',
+      title: '发现肉眼看不到的深层差异',
+      shortDesc: '穿透表层数据，锁定隐蔽风险',
+      fullSpeech: '设备特征码、文件隐藏属性、底层数据关联等信息人工根本无法察觉，云保标穿透文件表层数据进行深层比对，把隐蔽风险提前暴露出来。',
       icon: <ShieldCheck className="w-5 h-5" />,
       colorClass: 'text-sky-600',
       bgClass: 'bg-sky-50/70',
@@ -111,9 +111,9 @@ export default function ComparisonElf() {
     },
     {
       id: 'val-3',
-      title: '追根溯源',
-      shortDesc: '全景留痕，从纸面比对到物理级印记',
-      fullSpeech: '不单单是文字雷同，我们连写标书的人、用的电脑和操作痕迹都全部存证归档，在招投标、法律审查等场景提供不可抵赖、扎扎实实的物理设备证据链路！',
+      title: '一次上传，四大维度全覆盖',
+      shortDesc: '同步完成自检，一站式解决',
+      fullSpeech: '资信标、技术标、经济标、设备特征四大比对维度同步完成，无需多个工具来回切换，一个平台解决投标文件合规自检的全部需求。',
       icon: <Activity className="w-5 h-5" />,
       colorClass: 'text-rose-600',
       bgClass: 'bg-rose-50/70',
@@ -123,9 +123,9 @@ export default function ComparisonElf() {
     },
     {
       id: 'val-4',
-      title: '护航正义',
-      shortDesc: '三级红黄绿预警，护航招投标公平合规',
-      fullSpeech: '招投标是一场公平公正的竞争。我会根据各种线索自动评估并亮起红黄绿三色预警，输出最专业的合规报告，全力维护每一家诚信企业的利益，击破灰色串标链条！',
+      title: '提交前兜底，守住最后一道防线',
+      shortDesc: '提前拦截低级错误，避免废标',
+      fullSpeech: '标书封标前跑一遍云保标，文件疏漏、信息重复、报价偏差等问题在提交前被拦截，避免因低级错误导致废标或扣分，保住每一次投标机会。',
       icon: <Sparkles className="w-5 h-5" />,
       colorClass: 'text-violet-600',
       bgClass: 'bg-violet-50/70',
@@ -162,205 +162,172 @@ export default function ComparisonElf() {
   const renderElfSvg = () => {
     const expression = currentActiveItem.expression;
     
-    // Choose antenna glow color based on the item color
+    // Choose active glow color based on the item color
     const glowColor = currentActiveItem.accentColor;
 
     return (
       <svg 
-        width="110" 
-        height="125" 
-        viewBox="0 0 110 125" 
+        width="150" 
+        height="150" 
+        viewBox="0 0 100 100" 
         fill="none" 
         xmlns="http://www.w3.org/2000/svg"
-        className="drop-shadow-[0_10px_15px_rgba(99,102,241,0.15)]"
+        className="drop-shadow-2xl"
       >
         <defs>
-          <linearGradient id="bodyGrad" x1="55" y1="20" x2="55" y2="105" gradientUnits="userSpaceOnUse">
-            <stop offset="0%" stopColor="#EEF2FF" />
-            <stop offset="35%" stopColor="#E0E7FF" />
-            <stop offset="100%" stopColor="#C7D2FE" />
-          </linearGradient>
-          <linearGradient id="screenGrad" x1="55" y1="35" x2="55" y2="75" gradientUnits="userSpaceOnUse">
-            <stop offset="0%" stopColor="#1E293B" />
-            <stop offset="100%" stopColor="#0F172A" />
-          </linearGradient>
-          <linearGradient id="bellyGrad" x1="55" y1="78" x2="55" y2="98" gradientUnits="userSpaceOnUse">
-            <stop offset="0%" stopColor="#F8FAFC" />
+          <linearGradient id="cloudGradElf" x1="0%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0%" stopColor="#FFFFFF" />
             <stop offset="100%" stopColor="#E2E8F0" />
           </linearGradient>
-          <filter id="glowFilter" x="-20%" y="-20%" width="140%" height="140%">
-            <feGaussianBlur stdDeviation="3" result="blur" />
-            <feComposite in="SourceGraphic" in2="blur" operator="over" />
-          </filter>
+          <linearGradient id="shieldGradElf" x1="0%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0%" stopColor="#EF4444" />
+            <stop offset="100%" stopColor="#B91C1C" />
+          </linearGradient>
         </defs>
 
-        {/* Floating Ring / Jet Effect at the bottom */}
-        <motion.ellipse 
-          cx="55" 
-          cy="115" 
-          rx="22" 
-          ry="5" 
-          fill="#818CF8" 
-          opacity="0.4"
-          animate={{
-            rx: [22, 28, 22],
-            opacity: [0.4, 0.15, 0.4]
-          }}
-          transition={{
-            duration: 2.5,
-            repeat: Infinity,
-            ease: "easeInOut"
-          }}
-        />
-        <motion.ellipse 
-          cx="55" 
-          cy="115" 
-          rx="12" 
-          ry="3" 
-          fill={glowColor} 
-          opacity="0.8"
-          filter="url(#glowFilter)"
-          animate={{
-            rx: [12, 16, 12],
-            opacity: [0.8, 0.4, 0.8]
-          }}
-          transition={{
-            duration: 2.5,
-            repeat: Infinity,
-            ease: "easeInOut"
-          }}
-        />
+        {/* Background Soft Glow */}
+        <circle cx="50" cy="40" r="22" fill="#FEE2E2" opacity="0.35" filter="blur(3px)" />
 
-        {/* Connecting Neck Joint */}
-        <rect x="52" y="70" width="6" height="10" rx="3" fill="#64748B" />
-
-        {/* Main Body (Egg / Capsule Shaped) */}
-        <rect x="32" y="72" width="46" height="32" rx="20" fill="url(#bodyGrad)" stroke="#818CF8" strokeWidth="2.5" />
-        
-        {/* Shiny Belly Core */}
-        <ellipse cx="55" cy="88" rx="14" ry="10" fill="url(#bellyGrad)" stroke="#94A3B8" strokeWidth="1" />
-        <circle cx="55" cy="88" r="4" fill={glowColor} filter="url(#glowFilter)" />
-
-        {/* Head */}
+        {/* Floating Left Document */}
         <motion.g
-          animate={{
-            y: [0, -2, 0],
-          }}
-          transition={{
-            duration: 3,
-            repeat: Infinity,
-            ease: "easeInOut"
-          }}
+          animate={{ y: [0, -2, 0], rotate: [-15, -12, -15] }}
+          transition={{ repeat: Infinity, duration: 3, ease: "easeInOut" }}
         >
-          {/* Antennas */}
-          <line x1="55" y1="36" x2="55" y2="18" stroke="#64748B" strokeWidth="3" strokeLinecap="round" />
-          <motion.circle 
-            cx="55" 
-            cy="15" 
-            r="5" 
-            fill={glowColor}
-            filter="url(#glowFilter)"
-            animate={{
-              scale: [1, 1.25, 1],
-            }}
-            transition={{
-              duration: 1.5,
-              repeat: Infinity,
-              ease: "easeInOut"
-            }}
-          />
+          <path d="M 8 16 L 18 13 C 19 13, 19.5 13.5, 19.5 14 L 17 28 C 17 28.5, 16.5 29, 16 29 L 6 32 C 5.5 32, 5 31.5, 5 31 L 7.5 17 C 7.5 16.5, 8 16, 8 16 Z" fill="#FFFFFF" stroke="#FCA5A5" strokeWidth="0.5" />
+          <text x="12" y="21.5" fill="#EF4444" fontSize="2.2" fontWeight="bold" transform="rotate(-15, 12, 21.5)" textAnchor="middle">标书</text>
+          <line x1="8" y1="23.5" x2="15" y2="21.5" stroke="#F87171" strokeWidth="0.4" opacity="0.5" />
+          <line x1="7.5" y1="25.5" x2="14" y2="23.5" stroke="#F87171" strokeWidth="0.4" opacity="0.5" />
+          <line x1="7" y1="27.5" x2="12.5" y2="25.5" stroke="#F87171" strokeWidth="0.4" opacity="0.5" />
+        </motion.g>
 
-          {/* Ears/Side-screws */}
-          <rect x="18" y="44" width="6" height="14" rx="3" fill="#475569" />
-          <rect x="86" y="44" width="6" height="14" rx="3" fill="#475569" />
+        {/* Floating Right Document */}
+        <motion.g
+          animate={{ y: [0, 2, 0], rotate: [12, 15, 12] }}
+          transition={{ repeat: Infinity, duration: 3.5, ease: "easeInOut", delay: 0.5 }}
+        >
+          <path d="M 82 15 L 92 18 C 92.5 18, 93 18.5, 93 19 L 90 33 C 90 33.5, 89.5 34, 89 34 L 79 31 C 78.5 31, 78 30.5, 78 30 L 81 16 C 81 15.5, 81.5 15, 82 15 Z" fill="#FFFFFF" stroke="#FCA5A5" strokeWidth="0.5" />
+          <circle cx="86" cy="22" r="2" fill="none" stroke="#EF4444" strokeWidth="0.6" />
+          <path d="M 86 22 L 86 20 A 2 2 0 0 1 88 22 Z" fill="#EF4444" />
+          <line x1="81" y1="26" x2="89" y2="28" stroke="#F87171" strokeWidth="0.4" opacity="0.5" />
+          <line x1="80.5" y1="28" x2="87" y2="30" stroke="#F87171" strokeWidth="0.4" opacity="0.5" />
+        </motion.g>
 
-          {/* Main Helmet / Head Container */}
-          <rect x="22" y="30" width="66" height="46" rx="23" fill="url(#bodyGrad)" stroke="#818CF8" strokeWidth="2.5" />
+        {/* Outer Floating Red/Pink Ring */}
+        <motion.g
+          animate={{ rotate: 360 }}
+          transition={{ repeat: Infinity, duration: 15, ease: "linear" }}
+          style={{ transformOrigin: '50px 54px' }}
+        >
+          <ellipse cx="50" cy="54" rx="46" ry="6" fill="none" stroke="#FCA5A5" strokeWidth="0.8" opacity="0.4" strokeDasharray="3 2" />
+        </motion.g>
 
-          {/* Face Visor Screen */}
-          <rect x="28" y="35" width="54" height="34" rx="17" fill="url(#screenGrad)" stroke="#475569" strokeWidth="1.5" />
+        {/* Symmetrical Ears/Headphones */}
+        <rect x="22" y="29" width="4" height="10" rx="2" fill="#EF4444" stroke="#DC2626" strokeWidth="0.4" />
+        <circle cx="24" cy="34" r="1.5" fill="#FFFFFF" />
 
-          {/* Glowing Eyes & Mouth depending on current Elf's expression */}
+        <rect x="74" y="29" width="4" height="10" rx="2" fill="#EF4444" stroke="#DC2626" strokeWidth="0.4" />
+        <circle cx="76" cy="34" r="1.5" fill="#FFFFFF" />
+
+        {/* The Cloud Head (Mascot Body) */}
+        <path d="M 32 46 C 24 46, 22 36, 30 32 C 28 20, 42 16, 50 21 C 58 16, 72 20, 70 32 C 78 36, 76 46, 68 46 Z" fill="url(#cloudGradElf)" stroke="#CBD5E1" strokeWidth="0.8" />
+
+        {/* Circular Forehead Logo with stylised "云" */}
+        <circle cx="50" cy="22" r="5.5" fill="#EF4444" />
+        <path d="M 47.5 20.2 L 52.5 20.2 M 46.8 22 L 53.2 22 M 50 22 L 50 24.2 Q 50 25.5, 52 25" stroke="#FFFFFF" strokeWidth="0.8" fill="none" strokeLinecap="round" />
+
+        {/* Black Digital Screen Face */}
+        <rect x="33" y="28" width="34" height="18" rx="8" fill="#1E293B" stroke="#F1F5F9" strokeWidth="1" />
+        <rect x="34.5" y="29.5" width="31" height="15" rx="6.5" fill="#0F172A" />
+
+        {/* Symmetrical Arms */}
+        <path d="M 33 41 Q 38 46, 43 45" stroke="#FFFFFF" strokeWidth="4.5" strokeLinecap="round" fill="none" />
+        <path d="M 67 41 Q 62 46, 57 45" stroke="#FFFFFF" strokeWidth="4.5" strokeLinecap="round" fill="none" />
+        <circle cx="43" cy="45" r="2.2" fill="#475569" />
+        <circle cx="57" cy="45" r="2.2" fill="#475569" />
+
+        {/* Symmetrical Red Shield with white border and a white Checkmark */}
+        <g>
+          <path d="M 41 42 Q 50 44, 59 42 C 59 51, 55 57, 50 61 C 45 57, 41 51, 41 42 Z" fill="#FCA5A5" opacity="0.3" />
+          <path d="M 42 41 Q 50 43, 58 41 C 58 50, 54 56, 50 60 C 46 56, 42 50, 42 41 Z" fill="url(#shieldGradElf)" stroke="#FEE2E2" strokeWidth="0.8" />
+          <path d="M 44 43 Q 50 44.5, 56 43 C 56 49, 53 54, 50 57.5 C 47 54, 44 49, 44 43 Z" fill="none" stroke="#FFFFFF" strokeWidth="0.8" opacity="0.8" />
+          <path d="M 47 49 L 49.2 51.5 L 53.5 46.5" stroke="#FFFFFF" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" fill="none" />
+        </g>
+
+        {/* Symmetrical 3D Platform Base */}
+        <g>
+          {/* Base Shadows and depth */}
+          <ellipse cx="50" cy="88" rx="42" ry="10" fill="#DC2626" />
+          <rect x="8" y="88" width="84" height="4" fill="#DC2626" />
+          <ellipse cx="50" cy="92" rx="42" ry="10" fill="#991B1B" />
+
+          {/* Base White top cap */}
+          <ellipse cx="50" cy="85" rx="39" ry="8" fill="#FFFFFF" stroke="#EF4444" strokeWidth="1" />
+
+          {/* Big red text title: 云保标 */}
+          <text x="50" y="80.5" fill="#EF4444" fontSize="10.5" fontWeight="900" textAnchor="middle" style={{ letterSpacing: '1px', fontFamily: 'system-ui, -apple-system, sans-serif' }}>
+            云保标
+          </text>
+
+          {/* Ribbon slogan: 标书查重 · 安心投标 */}
+          <rect x="25" y="85" width="50" height="7" rx="3.5" fill="#EF4444" />
+          <text x="50" y="90" fill="#FFFFFF" fontSize="3" fontWeight="bold" textAnchor="middle" style={{ letterSpacing: '0.4px', fontFamily: 'system-ui, -apple-system, sans-serif' }}>
+            标书查重 · 安心投标
+          </text>
+        </g>
+
+        {/* Face Expression Screen inside the digital visor */}
+        <g>
           {expression === 'happy' && (
             <g>
-              {/* Joyful closed eyes arcs */}
-              <path d="M38,51 Q42,44 46,51" stroke="#10B981" strokeWidth="3" fill="none" strokeLinecap="round" />
-              <path d="M64,51 Q68,44 72,51" stroke="#10B981" strokeWidth="3" fill="none" strokeLinecap="round" />
-              {/* Cute curved smile */}
-              <path d="M51,60 Q55,65 59,60" stroke="#10B981" strokeWidth="2.5" fill="none" strokeLinecap="round" />
+              {/* Friendly Arching Eyes "∩ ∩" */}
+              <path d="M 38 39 Q 41.5 34.5, 45 39" stroke={glowColor} strokeWidth="2.5" fill="none" strokeLinecap="round" />
+              <path d="M 55 39 Q 58.5 34.5, 62 39" stroke={glowColor} strokeWidth="2.5" fill="none" strokeLinecap="round" />
+              {/* Smiling mouth */}
+              <path d="M 47.5 42 Q 50 44, 52.5 42" stroke={glowColor} strokeWidth="1.5" fill="none" strokeLinecap="round" />
             </g>
           )}
 
           {expression === 'analytical' && (
             <g>
-              {/* Glowing analytical scanning lines / hex-like eyes */}
-              <line x1="38" y1="48" x2="46" y2="48" stroke="#3B82F6" strokeWidth="3" strokeLinecap="round" />
-              <line x1="38" y1="52" x2="46" y2="52" stroke="#3B82F6" strokeWidth="1.5" strokeLinecap="round" />
-              <line x1="64" y1="48" x2="72" y2="48" stroke="#3B82F6" strokeWidth="3" strokeLinecap="round" />
-              <line x1="64" y1="52" x2="72" y2="52" stroke="#3B82F6" strokeWidth="1.5" strokeLinecap="round" />
+              {/* Glowing analytical scanning lines */}
+              <line x1="38" y1="36" x2="45" y2="36" stroke={glowColor} strokeWidth="2.5" strokeLinecap="round" />
+              <line x1="38" y1="39.5" x2="45" y2="39.5" stroke={glowColor} strokeWidth="1.2" strokeLinecap="round" />
+              <line x1="55" y1="36" x2="62" y2="36" stroke={glowColor} strokeWidth="2.5" strokeLinecap="round" />
+              <line x1="55" y1="39.5" x2="62" y2="39.5" stroke={glowColor} strokeWidth="1.2" strokeLinecap="round" />
               {/* Straight composed mouth */}
-              <line x1="51" y1="59" x2="59" y2="59" stroke="#3B82F6" strokeWidth="2.5" strokeLinecap="round" />
+              <line x1="47.5" y1="42.5" x2="52.5" y2="42.5" stroke={glowColor} strokeWidth="2" strokeLinecap="round" />
+              {/* active glow scan line moving up and down */}
+              <motion.line 
+                x1="34" y1="29.5" x2="66" y2="29.5" 
+                stroke={glowColor} strokeWidth="1" 
+                animate={{ y: [0, 13, 0] }}
+                transition={{ repeat: Infinity, duration: 1.5, ease: "linear" }}
+              />
             </g>
           )}
 
           {expression === 'thinking' && (
             <g>
-              {/* Curious expression, one eyebrow high, eyes round */}
-              <path d="M37,43 Q41,41 45,43" stroke="#EC4899" strokeWidth="2" fill="none" strokeLinecap="round" />
-              <circle cx="41" cy="49" r="3" fill="#EC4899" />
-              <circle cx="69" cy="49" r="3" fill="#EC4899" />
+              {/* Curious expression, eyebrow and circles */}
+              <path d="M 37.5 34.5 Q 41.5 33, 44.5 34.5" stroke={glowColor} strokeWidth="1.5" fill="none" strokeLinecap="round" />
+              <circle cx="41.5" cy="38" r="2.2" fill={glowColor} />
+              <circle cx="58.5" cy="38" r="2.2" fill={glowColor} />
               {/* Small "o" mouth */}
-              <circle cx="55" cy="59" r="2.5" stroke="#EC4899" strokeWidth="2" fill="none" />
+              <circle cx="50" cy="42" r="1.5" stroke={glowColor} strokeWidth="1.2" fill="none" />
             </g>
           )}
 
           {expression === 'detective' && (
             <g>
               {/* Magnifying visual lens over left eye, squinting right eye */}
-              <circle cx="41" cy="48" r="5" stroke="#A78BFA" strokeWidth="2" fill="none" filter="url(#glowFilter)" />
-              <line x1="45" y1="52" x2="49" y2="56" stroke="#A78BFA" strokeWidth="2.5" strokeLinecap="round" />
-              <line x1="65" y1="48" x2="73" y2="48" stroke="#A78BFA" strokeWidth="3.5" strokeLinecap="round" />
+              <circle cx="41" cy="37" r="3.5" stroke={glowColor} strokeWidth="1.5" fill="none" />
+              <line x1="43.5" y1="39.5" x2="46" y2="42" stroke={glowColor} strokeWidth="1.8" strokeLinecap="round" />
+              <line x1="56" y1="37" x2="62" y2="37" stroke={glowColor} strokeWidth="2.5" strokeLinecap="round" />
               {/* Smart smirk */}
-              <path d="M51,59 Q55,62 58,58" stroke="#A78BFA" strokeWidth="2.5" fill="none" strokeLinecap="round" />
+              <path d="M 47.5 42 Q 50.5 44, 52 41" stroke={glowColor} strokeWidth="1.5" fill="none" strokeLinecap="round" />
             </g>
           )}
-        </motion.g>
-
-        {/* Floating Wings / Arms */}
-        {/* Left Arm */}
-        <motion.path 
-          d="M26,82 Q12,78 16,70" 
-          stroke="#C7D2FE" 
-          strokeWidth="4.5" 
-          strokeLinecap="round"
-          fill="none"
-          animate={{
-            rotate: [0, -8, 0],
-            y: [0, 2, 0]
-          }}
-          transition={{
-            duration: 2,
-            repeat: Infinity,
-            ease: "easeInOut"
-          }}
-        />
-        {/* Right Arm */}
-        <motion.path 
-          d="M84,82 Q98,78 94,70" 
-          stroke="#C7D2FE" 
-          strokeWidth="4.5" 
-          strokeLinecap="round"
-          fill="none"
-          animate={{
-            rotate: [0, 8, 0],
-            y: [0, -2, 0]
-          }}
-          transition={{
-            duration: 2.2,
-            repeat: Infinity,
-            ease: "easeInOut"
-          }}
-        />
+        </g>
       </svg>
     );
   };
@@ -392,7 +359,7 @@ export default function ComparisonElf() {
                 : 'text-slate-600 hover:text-slate-800'
             }`}
           >
-            🛠️ 核心功能
+            🚨 招投标痛点排查
           </button>
           <button
             onClick={() => handleTabChange('value')}
@@ -402,7 +369,7 @@ export default function ComparisonElf() {
                 : 'text-slate-600 hover:text-slate-800'
             }`}
           >
-            🌟 产品价值
+            🌟 核心价值增效
           </button>
         </div>
       </div>

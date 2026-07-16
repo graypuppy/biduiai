@@ -335,28 +335,28 @@ const Project: React.FC<ProjectProps> = ({
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {[
                 {
-                  id: '文件设备特征比对',
-                  num: '1',
-                  title: '物理设备特征比对 (硬核碰撞)',
-                  desc: '提取主板UUID/网卡MAC等，识同同一设备代写。'
-                },
-                {
                   id: '资信标比对',
-                  num: '2',
-                  title: '资信标深度比对 (关系穿透)',
-                  desc: '识别法人身份证/项目社保等，锁定影子企业。'
+                  num: '1',
+                  title: '人员与资质信息比对',
+                  desc: '核验不同版本中项目负责人、技术负责人、资质证书等信息是否一致，防止人员重复或资质冲突'
                 },
                 {
                   id: '技术标比对',
-                  num: '3',
-                  title: '技术标语义比对 (语义降维)',
-                  desc: 'Bid-Transformer 算法，颠倒词序仍无所遁形。'
+                  num: '2',
+                  title: '技术方案内容比对',
+                  desc: '比对施工方案、质量措施等技术标章节是否前后一致，发现遗漏修改或内容矛盾'
                 },
                 {
                   id: '经济标比对',
+                  num: '3',
+                  title: '清单错误相似性比对',
+                  desc: '核查工程量清单的清标结果是否存在雷同性错误。本项需配合上传招标文件'
+                },
+                {
+                  id: '文件设备特征比对',
                   num: '4',
-                  title: '经济标合规比对 (报价碰撞)',
-                  desc: '识别等差等比漂移。需配合上传招标文件。'
+                  title: '文件底层属性比对',
+                  desc: '检测文件创建设备、修改时间、作者等隐藏信息，识别文件真实来源'
                 }
               ].map(card => {
                 const isSupported = availableCheckTypes.includes(card.id);
