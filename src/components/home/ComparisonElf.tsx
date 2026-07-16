@@ -344,8 +344,8 @@ export default function ComparisonElf() {
             <Lightbulb className="w-5 h-5 animate-pulse" />
           </div>
           <div>
-            <h2 className="text-lg font-bold text-slate-900">小精灵的智能洞察</h2>
-            <p className="text-xs text-slate-500">点击小精灵或卡片，听听它的专业解析</p>
+            <h2 className="text-lg font-bold text-slate-900">云保标的智能洞察</h2>
+            <p className="text-xs text-slate-500">点击云保标或卡片，听听它的专业解析</p>
           </div>
         </div>
 
@@ -437,7 +437,7 @@ export default function ComparisonElf() {
             onClick={triggerSpin}
           >
             <RefreshCw className="w-3 h-3 animate-spin" style={{ animationDuration: '6s' }} /> 
-            点击精灵互动
+            点击云保标互动
           </motion.div>
         </div>
 

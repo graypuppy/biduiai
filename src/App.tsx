@@ -498,7 +498,7 @@ export default function App() {
       };
 
       setCompareLogs([]);
-      addLog(`[System] 初始化多版本比对引擎 v2.0...`);
+      addLog(`[System] 初始化云保标引擎 v2.0...`);
       addLog(`[System] 加载 ${comparingFiles.length} 份待比对文件...`);
       addLog(`[System] 分配计算资源，准备执行深度交叉解析...`);
 

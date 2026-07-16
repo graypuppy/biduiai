@@ -66,7 +66,7 @@ const Header: React.FC<HeaderProps> = ({
           <div className="bg-indigo-600 p-2 rounded-lg">
             <FileSearch className="w-5 h-5 text-white" />
           </div>
-          <span className="font-bold text-xl tracking-tight text-slate-800">多版本文件比对系统</span>
+          <span className="font-bold text-xl tracking-tight text-slate-800">云保标</span>
         </div>
         <nav className="hidden md:flex items-center gap-6">
           <button className={`font-medium transition-colors ${currentPage === 'home' ? 'text-indigo-600' : 'text-slate-500 hover:text-slate-900'}`} onClick={() => setCurrentPage('home')}>首页</button>

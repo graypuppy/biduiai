@@ -114,7 +114,7 @@ export default function PurchaseModal({ isOpen, onClose, selectedSku, setSelecte
                           P
                         </div>
                         <div>
-                          <h4 className="font-bold text-slate-800 text-lg">多版本文件比对-按页充值</h4>
+                          <h4 className="font-bold text-slate-800 text-lg">云保标-按页充值</h4>
                           <p className="text-sm text-slate-500 mt-1">支持资信标、技术标、经济标及底层设备特征的深度比对分析，按实际比对页数扣费</p>
                         </div>
                       </div>
