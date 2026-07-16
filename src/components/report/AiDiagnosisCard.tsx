@@ -235,7 +235,7 @@ export default function AiDiagnosisCard({
           </div>
 
           <div className="mt-4 pt-4 border-t border-indigo-50/80 flex items-center justify-between text-[11px] text-slate-400 font-medium">
-            <span className="flex items-center gap-1"><Clock className="w-3 h-3" /> 审计分析基于招投标规范 DB11/T 和 AI 语义风控双重模型</span>
+            <span className="flex items-center gap-1"><Clock className="w-3 h-3" /> ai输出内容具备随机性，请以实际检测环节结果为准</span>
           </div>
         </div>
 
