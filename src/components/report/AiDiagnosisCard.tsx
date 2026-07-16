@@ -76,10 +76,6 @@ export default function AiDiagnosisCard({
           <div>
             <div className="flex items-center gap-2">
               <h3 className="font-bold text-slate-800 text-base">比对结果 AI 智能诊断</h3>
-              <span className="flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-extrabold bg-indigo-100 text-indigo-700 uppercase animate-pulse border border-indigo-200">
-                <Sparkles className="w-2.5 h-2.5" />
-                Gemini Powered
-              </span>
             </div>
             <p className="text-xs text-slate-500 mt-1">基于大模型与招投标合规审计规则，进行穿透式风险研判与防范处置分析</p>
           </div>
@@ -135,9 +131,6 @@ export default function AiDiagnosisCard({
                     <div className="p-3 bg-white/50 border border-slate-100 rounded-xl space-y-1">
                       <div className="flex items-center justify-between">
                         <span className="text-[11px] font-bold text-slate-500">设备同源性检测</span>
-                        <span className={`text-[10px] px-1.5 py-0.5 rounded-full font-bold ${riskData.device > 0 ? 'bg-red-50 text-red-600 border border-red-100' : 'bg-emerald-50 text-emerald-600'}`}>
-                          {riskData.device > 0 ? '高危重合' : '安全无虞'}
-                        </span>
                       </div>
                       <p className="text-[11px] text-slate-600 leading-snug">
                         检出 <span className="font-bold text-slate-800">{riskData.device}</span> 处完全一致的MAC地址与硬盘硬件序列号，在物理设备层面提供了确凿的同源编写证据。
@@ -147,10 +140,7 @@ export default function AiDiagnosisCard({
                     {/* Item 2 */}
                     <div className="p-3 bg-white/50 border border-slate-100 rounded-xl space-y-1">
                       <div className="flex items-center justify-between">
-                        <span className="text-[11px] font-bold text-slate-500">技术标文本抄袭</span>
-                        <span className={`text-[10px] px-1.5 py-0.5 rounded-full font-bold ${riskData.tech > 0 ? 'bg-red-50 text-red-600 border border-red-100' : 'bg-emerald-50 text-emerald-600'}`}>
-                          {riskData.tech > 5 ? '中高度雷同' : '微量重合'}
-                        </span>
+                        <span className="text-[11px] font-bold text-slate-500">技术方案内容雷同检测</span>
                       </div>
                       <p className="text-[11px] text-slate-600 leading-snug">
                         检出 <span className="font-bold text-slate-800">{riskData.tech}</span> 处100%完全重叠的施工或技术方案段落，存在明显的跨标书整段抄袭、套用同一源模板迹象。
@@ -160,10 +150,7 @@ export default function AiDiagnosisCard({
                     {/* Item 3 */}
                     <div className="p-3 bg-white/50 border border-slate-100 rounded-xl space-y-1">
                       <div className="flex items-center justify-between">
-                        <span className="text-[11px] font-bold text-slate-500">经济标锁号校验</span>
-                        <span className={`text-[10px] px-1.5 py-0.5 rounded-full font-bold ${riskData.economic > 0 ? 'bg-red-50 text-red-600 border border-red-100' : 'bg-emerald-50 text-emerald-600'}`}>
-                          {riskData.economic > 0 ? '锁号重合' : '未见异常'}
-                        </span>
+                        <span className="text-[11px] font-bold text-slate-500">清单错误相似性检测</span>
                       </div>
                       <p className="text-[11px] text-slate-600 leading-snug">
                         发现相同的计价软件加密狗锁号 <span className="font-bold text-slate-800">({riskData.economic}处)</span>，暗示不同单位的报价标书是由同一把物理加密狗汇算并生成。
@@ -174,9 +161,6 @@ export default function AiDiagnosisCard({
                     <div className="p-3 bg-white/50 border border-slate-100 rounded-xl space-y-1">
                       <div className="flex items-center justify-between">
                         <span className="text-[11px] font-bold text-slate-500">资信基本要素雷同</span>
-                        <span className={`text-[10px] px-1.5 py-0.5 rounded-full font-bold ${riskData.credit > 0 ? 'bg-orange-50 text-orange-600 border border-orange-100' : 'bg-emerald-50 text-emerald-600'}`}>
-                          {riskData.credit > 0 ? '交叉混淆' : '正常通过'}
-                        </span>
                       </div>
                       <p className="text-[11px] text-slate-600 leading-snug">
                         发现法人名称、联系方式、往来信用担保等基础数据混淆一致，极可能是由同一编制团队串联起草相关申报材料。
@@ -224,8 +208,8 @@ export default function AiDiagnosisCard({
                   </div>
 
                   <div className="p-3 bg-amber-50/50 border border-amber-200/60 rounded-xl flex items-start gap-2">
-                    <AlertCircle className="w-4 h-4 text-amber-600 shrink-0 mt-0.5" />
-                    <div className="text-[10px] text-amber-800 leading-normal">
+                    <AlertCircle className="w-5 h-5 text-amber-600 shrink-0 mt-0.5" />
+                    <div className="text-sm text-amber-800 leading-relaxed">
                       <strong>合规铁律提示：</strong> 在合规审计阶段，切忌只做字面文字替换。现在的多维指纹识别能够穿透文档内部的元属性（如历史编辑人、文档建立时间等），直接在新物理环境中“干净新建”是最低风险的修正策略。
                     </div>
                   </div>
@@ -251,10 +235,6 @@ export default function AiDiagnosisCard({
               <Radio className="w-3.5 h-3.5 text-indigo-500 animate-pulse" />
               <span className="text-xs font-bold text-slate-700">AI 智能风控数字人</span>
             </div>
-            <span className="flex items-center gap-1 text-[10px] font-mono px-2 py-0.5 rounded bg-indigo-50 border border-indigo-100 text-indigo-700 font-extrabold animate-pulse">
-              <span className="w-1.5 h-1.5 rounded-full bg-indigo-600 animate-ping" />
-              ON-LINE SYSTEM
-            </span>
           </div>
 
           {/* AI Mascot & Speech Section */}
@@ -481,34 +461,10 @@ export default function AiDiagnosisCard({
                       {speech.text}
                     </p>
                   </div>
-
-                  <div className="flex items-center justify-between mt-3.5 pt-2 border-t border-slate-200/50 text-[10px] text-slate-400 font-semibold">
-                    <span className="flex items-center gap-1">
-                      <Zap className={`w-3 h-3 ${activeTab === 'conclusion' ? 'text-amber-500' : 'text-emerald-500'}`} />
-                      {speech.alert}
-                    </span>
-                    <span>AI助理风控评级：V2.5</span>
-                  </div>
                 </motion.div>
               </AnimatePresence>
             </div>
 
-          </div>
-
-          {/* Bottom telemetry widgets */}
-          <div className="w-full grid grid-cols-3 gap-2 border-t border-slate-200/60 pt-3 text-center text-[10px] text-slate-500 font-medium z-10">
-            <div className="flex flex-col bg-white/60 p-1.5 rounded-lg border border-slate-100/80">
-              <span className="text-slate-400">词法查重深度</span>
-              <span className="font-bold text-slate-700 font-mono mt-0.5">NLP 12层</span>
-            </div>
-            <div className="flex flex-col bg-white/60 p-1.5 rounded-lg border border-slate-100/80">
-              <span className="text-slate-400">穿透性硬件审计</span>
-              <span className="font-bold text-slate-700 font-mono mt-0.5">MAC / HD</span>
-            </div>
-            <div className="flex flex-col bg-white/60 p-1.5 rounded-lg border border-slate-100/80">
-              <span className="text-slate-400">合规审计基准</span>
-              <span className="font-bold text-slate-700 font-mono mt-0.5">DB11 V2026</span>
-            </div>
           </div>
 
         </div>
