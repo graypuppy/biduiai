@@ -300,8 +300,12 @@ export default function PurchaseModal({ isOpen, onClose, selectedSku, setSelecte
                     </button>
                   </div>
                   
-                  <div className="mt-4 text-xs text-slate-400 text-center">
-                    支付即代表你同意 <a href="#" className="text-blue-500 hover:underline">《用户协议》</a> 及 <a href="#" className="text-blue-500 hover:underline">《隐私协议》</a> ，购买后不支持7天无理由退货
+                  <div className="mt-4 text-xs text-slate-400 text-center flex flex-col gap-1.5">
+                    <span>支付即代表你同意 <a href="#" className="text-blue-500 hover:underline">《用户协议》</a> 及 <a href="#" className="text-blue-500 hover:underline">《隐私协议》</a> ，购买后不支持7天无理由退货</span>
+                    <span className="text-amber-600/80 font-medium flex items-center justify-center gap-1">
+                      <AlertCircle className="w-3.5 h-3.5" />
+                      温馨提示：充值额度购买后有效期为一年，请在有效期内使用
+                    </span>
                   </div>
                 </>
               )}
