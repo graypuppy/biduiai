@@ -94,7 +94,7 @@ export default function LoginModal({ isOpen, onClose, onLogin }: LoginModalProps
                   </div>
                   
                   <p className="text-slate-500 mb-8">
-                    检测到您是首次登录，为了您的账号安全及下次能使用密码快速登录，建议您设置一个登录密码。
+                    检测到您的账号尚未设置密码，为了您的账号安全及下次能使用密码快速登录，建议您设置一个登录密码。
                     <span className="block text-sm text-slate-400 mt-2">（如果您选择跳过，后续登录时可通过“忘记密码”重置，或在登录后点击右上角头像进行修改）</span>
                   </p>
                   
@@ -127,7 +127,7 @@ export default function LoginModal({ isOpen, onClose, onLogin }: LoginModalProps
                           onLogin();
                           setTimeout(() => setLoginMethod('phone'), 500); // reset state after closing
                         }}
-                        className="flex-1 bg-slate-100 text-slate-600 font-medium py-3 rounded-md hover:bg-slate-200 transition-colors"
+                        className="px-6 bg-slate-100 text-slate-600 font-medium py-3 rounded-md hover:bg-slate-200 transition-colors whitespace-nowrap shrink-0"
                       >
                         跳过，直接进入
                       </button>
@@ -136,7 +136,7 @@ export default function LoginModal({ isOpen, onClose, onLogin }: LoginModalProps
                           onLogin();
                           setTimeout(() => setLoginMethod('phone'), 500);
                         }}
-                        className="flex-[2] bg-blue-600 text-white font-medium py-3 rounded-md hover:bg-blue-700 transition-colors shadow-sm"
+                        className="flex-1 bg-blue-600 text-white font-medium py-3 rounded-md hover:bg-blue-700 transition-colors shadow-sm whitespace-nowrap"
                       >
                         保存密码并进入
                       </button>
@@ -290,7 +290,7 @@ export default function LoginModal({ isOpen, onClose, onLogin }: LoginModalProps
                       <div className="flex justify-between items-start px-1">
                         <span className="text-xs text-slate-500 leading-relaxed max-w-[280px]">
                           未注册账号输入密码即可自动注册。<br/>
-                          <span className="text-slate-400">已注册用户若未设置密码，请点击<button onClick={() => setLoginMethod('forgot_password')} className="text-blue-600 hover:underline">找回密码</button></span>
+                          <span className="text-slate-400">已注册用户若未设置密码，请点击<button onClick={() => setLoginMethod('forgot_password')} className="text-blue-600 hover:underline">忘记密码</button></span>
                         </span>
                         <button 
                           onClick={() => setLoginMethod('forgot_password')}
