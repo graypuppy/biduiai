@@ -82,6 +82,7 @@ import LoginModal from './components/modals/LoginModal';
 import PurchaseModal from './components/modals/PurchaseModal';
 import DeleteConfirmModal from './components/modals/DeleteConfirmModal';
 import DeductionConfirmModal from './components/modals/DeductionConfirmModal';
+import ChangePasswordModal from './components/modals/ChangePasswordModal';
 
 import { useAppState } from './hooks/useAppState';
 import { getFileSupportedTypes, getFileExtension, getSupportedCheckTypes, getDisabledItems, formatSize, getTypeColorClass, getTasks } from './utils/fileUtils';
@@ -94,6 +95,7 @@ export default function App() {
     isLoggedIn, setIsLoggedIn,
     showLoginModal, setShowLoginModal,
     showUserMenu, setShowUserMenu,
+    showChangePasswordModal, setShowChangePasswordModal,
     currentPage, setCurrentPage,
     isDragging, setIsDragging,
     files, setFiles,
@@ -890,6 +892,7 @@ export default function App() {
           setPurchaseInitialView('records');
           setShowPurchaseModal(true);
         }}
+        onOpenChangePassword={() => setShowChangePasswordModal(true)}
       />
 
       <main className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 py-8">
@@ -1069,6 +1072,12 @@ export default function App() {
         onPaymentSuccess={handlePaymentSuccess}
         initialView={purchaseInitialView}
         userBalance={userBalance}
+      />
+
+      {/* Change Password Modal */}
+      <ChangePasswordModal 
+        isOpen={showChangePasswordModal}
+        onClose={() => setShowChangePasswordModal(false)}
       />
 
       {/* Delete Confirmation Modal */}

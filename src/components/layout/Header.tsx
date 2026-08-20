@@ -20,6 +20,7 @@ interface HeaderProps {
   onOpenRecords?: () => void;
   userBalance?: number;
   onOpenRecharge?: () => void;
+  onOpenChangePassword?: () => void;
 }
 
 const Header: React.FC<HeaderProps> = ({
@@ -39,6 +40,7 @@ const Header: React.FC<HeaderProps> = ({
   onOpenRecords,
   userBalance = 1250,
   onOpenRecharge,
+  onOpenChangePassword,
 }) => {
   const notificationsRef = React.useRef<HTMLDivElement>(null);
   const userMenuRef = React.useRef<HTMLDivElement>(null);
@@ -183,7 +185,16 @@ const Header: React.FC<HeaderProps> = ({
                     transition={{ duration: 0.15 }}
                     className="absolute right-0 top-full mt-2 w-40 bg-white rounded-xl shadow-xl border border-slate-200 overflow-hidden z-50"
                   >
-                    <div className="p-2">
+                    <div className="p-2 space-y-1">
+                      <button 
+                        className="w-full text-left px-4 py-2 text-sm text-slate-700 hover:bg-slate-50 rounded-lg transition-colors flex items-center gap-2"
+                        onClick={() => {
+                          setShowUserMenu(false);
+                          onOpenChangePassword?.();
+                        }}
+                      >
+                        修改密码
+                      </button>
                       <button 
                         className="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50 rounded-lg transition-colors flex items-center gap-2"
                         onClick={() => {

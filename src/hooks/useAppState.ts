@@ -15,6 +15,7 @@ export function useAppState() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [showLoginModal, setShowLoginModal] = useState(false);
   const [showUserMenu, setShowUserMenu] = useState(false);
+  const [showChangePasswordModal, setShowChangePasswordModal] = useState(false);
 
   // Navigation State
   const [currentPage, setCurrentPage] = useState<'home' | 'project' | 'comparing' | 'report' | 'history' | 'rules'>('home');
@@ -133,6 +134,7 @@ export function useAppState() {
     isLoggedIn, setIsLoggedIn,
     showLoginModal, setShowLoginModal,
     showUserMenu, setShowUserMenu,
+    showChangePasswordModal, setShowChangePasswordModal,
     currentPage, setCurrentPage,
     isDragging, setIsDragging,
     files, setFiles,
