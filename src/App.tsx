@@ -132,6 +132,7 @@ export default function App() {
     filterBiddingDoc, setFilterBiddingDoc,
     excludeTableHeaders, setExcludeTableHeaders,
     excludeTableTitles, setExcludeTableTitles,
+    techCompareMethod, setTechCompareMethod,
     biddingDocFile, setBiddingDocFile,
     biddingDocError, setBiddingDocError,
     economicRegion, setEconomicRegion,
@@ -301,6 +302,7 @@ export default function App() {
       setFilterBiddingDoc(tpl.config.filterBiddingDoc);
       setExcludeTableHeaders(tpl.config.excludeTableHeaders || false);
       setExcludeTableTitles(tpl.config.excludeTableTitles || false);
+      setTechCompareMethod(tpl.config.techCompareMethod || 'semantic');
     }
   };
 
@@ -978,6 +980,8 @@ export default function App() {
               setExcludeTableHeaders={setExcludeTableHeaders}
               excludeTableTitles={excludeTableTitles}
               setExcludeTableTitles={setExcludeTableTitles}
+              techCompareMethod={techCompareMethod}
+              setTechCompareMethod={setTechCompareMethod}
               biddingDocFile={biddingDocFile}
               removeBiddingDoc={removeBiddingDoc}
               handleBiddingDocInput={handleBiddingDocInput}

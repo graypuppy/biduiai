@@ -287,6 +287,51 @@ export default function TemplateEditorModal({
             </div>
           </div>
 
+          <div className="bg-slate-50 p-4 rounded-lg border border-slate-200">
+            <div className="font-medium text-slate-700 mb-2">比对核心策略 (针对技术标)</div>
+            <div className="grid grid-cols-2 gap-4">
+              <label className={`flex flex-col p-3 border rounded-lg cursor-pointer transition-colors ${
+                (editingTemplate.config.techCompareMethod || 'semantic') === 'semantic' 
+                  ? 'border-indigo-600 bg-indigo-50/50' 
+                  : 'border-slate-200 hover:border-indigo-300 bg-white'
+              }`}>
+                <div className="flex items-center gap-2 mb-1">
+                  <input 
+                    type="radio" 
+                    className="w-4 h-4 text-indigo-600 focus:ring-indigo-600"
+                    checked={(editingTemplate.config.techCompareMethod || 'semantic') === 'semantic'}
+                    onChange={() => setEditingTemplate({
+                      ...editingTemplate,
+                      config: { ...editingTemplate.config, techCompareMethod: 'semantic' }
+                    })}
+                  />
+                  <span className="font-medium text-sm text-slate-800">语义深度比对</span>
+                </div>
+                <div className="text-xs text-slate-500 pl-6">可能耗时较长，但更加精准</div>
+              </label>
+              
+              <label className={`flex flex-col p-3 border rounded-lg cursor-pointer transition-colors ${
+                editingTemplate.config.techCompareMethod === 'text' 
+                  ? 'border-indigo-600 bg-indigo-50/50' 
+                  : 'border-slate-200 hover:border-indigo-300 bg-white'
+              }`}>
+                <div className="flex items-center gap-2 mb-1">
+                  <input 
+                    type="radio" 
+                    className="w-4 h-4 text-indigo-600 focus:ring-indigo-600"
+                    checked={editingTemplate.config.techCompareMethod === 'text'}
+                    onChange={() => setEditingTemplate({
+                      ...editingTemplate,
+                      config: { ...editingTemplate.config, techCompareMethod: 'text' }
+                    })}
+                  />
+                  <span className="font-medium text-sm text-slate-800">纯文字极速比对</span>
+                </div>
+                <div className="text-xs text-slate-500 pl-6">比对迅速但不含语义判断</div>
+              </label>
+            </div>
+          </div>
+
           <div className="grid grid-cols-2 gap-6">
             <div className="flex items-center justify-between p-4 bg-slate-50 rounded-lg border border-slate-200">
               <div>

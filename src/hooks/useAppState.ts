@@ -86,6 +86,7 @@ export function useAppState() {
   const [filterBiddingDoc, setFilterBiddingDoc] = useState(true);
   const [excludeTableHeaders, setExcludeTableHeaders] = useState(false);
   const [excludeTableTitles, setExcludeTableTitles] = useState(false);
+  const [techCompareMethod, setTechCompareMethod] = useState<'semantic' | 'text'>('semantic');
   const [biddingDocFile, setBiddingDocFile] = useState<{id: string, name: string, size: number} | null>(null);
   const [biddingDocError, setBiddingDocError] = useState<string | null>(null);
 
@@ -171,6 +172,7 @@ export function useAppState() {
     filterBiddingDoc, setFilterBiddingDoc,
     excludeTableHeaders, setExcludeTableHeaders,
     excludeTableTitles, setExcludeTableTitles,
+    techCompareMethod, setTechCompareMethod,
     biddingDocFile, setBiddingDocFile,
     biddingDocError, setBiddingDocError,
     economicRegion, setEconomicRegion,

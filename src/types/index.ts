@@ -48,6 +48,7 @@ export type Template = {
     filterBiddingDoc: boolean;
     excludeTableHeaders: boolean;
     excludeTableTitles: boolean;
+    techCompareMethod?: 'semantic' | 'text';
   };
 };
 

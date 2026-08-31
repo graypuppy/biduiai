@@ -64,6 +64,8 @@ interface ProjectProps {
   setExcludeTableHeaders: (val: boolean) => void;
   excludeTableTitles: boolean;
   setExcludeTableTitles: (val: boolean) => void;
+  techCompareMethod?: 'semantic' | 'text';
+  setTechCompareMethod?: (val: 'semantic' | 'text') => void;
   biddingDocFile: { id: string; name: string; size: number } | null;
   biddingDocError: string | null;
   handleBiddingDocInput: (e: React.ChangeEvent<HTMLInputElement>) => void;
@@ -113,6 +115,8 @@ const Project: React.FC<ProjectProps> = ({
   setExcludeTableHeaders,
   excludeTableTitles,
   setExcludeTableTitles,
+  techCompareMethod = 'semantic',
+  setTechCompareMethod,
   biddingDocFile,
   biddingDocError,
   handleBiddingDocInput,
@@ -492,6 +496,64 @@ const Project: React.FC<ProjectProps> = ({
               <div className="flex items-center gap-2">
                 <span className="text-base">🛠️</span>
                 <h3 className="text-sm font-extrabold text-slate-800">技术标高级调优配置</h3>
+              </div>
+              
+              {/* Compare Method Selection */}
+              <div className="bg-slate-50/80 p-4 rounded-xl border border-slate-200/60">
+                <div className="text-xs sm:text-sm font-bold text-slate-700 mb-3">比对核心策略</div>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <label 
+                    className={`relative flex flex-col p-3 rounded-lg border-2 cursor-pointer transition-all ${
+                      techCompareMethod === 'semantic' 
+                        ? 'border-indigo-600 bg-indigo-50/30' 
+                        : 'border-slate-200 hover:border-indigo-300 bg-white'
+                    }`}
+                  >
+                    <div className="flex items-center justify-between mb-1">
+                      <div className="flex items-center gap-2">
+                        <input 
+                          type="radio" 
+                          name="techCompareMethod" 
+                          value="semantic"
+                          className="w-4 h-4 text-indigo-600 border-slate-300 focus:ring-indigo-600"
+                          checked={techCompareMethod === 'semantic'}
+                          onChange={() => setTechCompareMethod?.('semantic')}
+                        />
+                        <span className="font-bold text-slate-800 text-sm">语义深度比对</span>
+                      </div>
+                      {techCompareMethod === 'semantic' && <Check className="w-4 h-4 text-indigo-600" />}
+                    </div>
+                    <p className="text-xs text-slate-500 pl-6 leading-relaxed">
+                      根据语义进行比对（可能耗时较长，但更加精准，能发现同义替换）
+                    </p>
+                  </label>
+                  
+                  <label 
+                    className={`relative flex flex-col p-3 rounded-lg border-2 cursor-pointer transition-all ${
+                      techCompareMethod === 'text' 
+                        ? 'border-indigo-600 bg-indigo-50/30' 
+                        : 'border-slate-200 hover:border-indigo-300 bg-white'
+                    }`}
+                  >
+                    <div className="flex items-center justify-between mb-1">
+                      <div className="flex items-center gap-2">
+                        <input 
+                          type="radio" 
+                          name="techCompareMethod" 
+                          value="text"
+                          className="w-4 h-4 text-indigo-600 border-slate-300 focus:ring-indigo-600"
+                          checked={techCompareMethod === 'text'}
+                          onChange={() => setTechCompareMethod?.('text')}
+                        />
+                        <span className="font-bold text-slate-800 text-sm">纯文字极速比对</span>
+                      </div>
+                      {techCompareMethod === 'text' && <Check className="w-4 h-4 text-indigo-600" />}
+                    </div>
+                    <p className="text-xs text-slate-500 pl-6 leading-relaxed">
+                      根据纯文字进行比对（比对时间迅速，但不如语义精准，适合初筛）
+                    </p>
+                  </label>
+                </div>
               </div>
 
               {/* Sliders and Selectors Row */}
