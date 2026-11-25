@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
-import { FileItem, Notification, Template, PdfPreviewState } from '../types';
+import { FileItem, Notification, Template, PdfPreviewState, RechargeOrder, InvoiceRecord, InvoiceTitlePreset } from '../types';
 import { 
   ALL_CHECK_TYPES, 
   ALL_CREDIT_ITEMS, 
@@ -7,7 +7,10 @@ import {
   ALL_ECONOMIC_ITEMS, 
   ALL_DEVICE_ITEMS,
   DEFAULT_TEMPLATES,
-  HISTORY_ITEMS
+  HISTORY_ITEMS,
+  INITIAL_RECHARGE_ORDERS,
+  INITIAL_INVOICE_RECORDS,
+  INITIAL_INVOICE_TITLES
 } from '../constants';
 
 export function useAppState() {
@@ -104,6 +107,9 @@ export function useAppState() {
 
   // Purchase & Comparing State
   const [userBalance, setUserBalance] = useState<number>(1250);
+  const [rechargeOrders, setRechargeOrders] = useState<RechargeOrder[]>(INITIAL_RECHARGE_ORDERS);
+  const [invoiceRecords, setInvoiceRecords] = useState<InvoiceRecord[]>(INITIAL_INVOICE_RECORDS);
+  const [savedInvoiceTitles, setSavedInvoiceTitles] = useState<InvoiceTitlePreset[]>(INITIAL_INVOICE_TITLES);
   const [showPurchaseModal, setShowPurchaseModal] = useState(false);
   const [purchaseInitialView, setPurchaseInitialView] = useState<'main' | 'transfer' | 'records' | 'coupons'>('main');
   const [pendingComparison, setPendingComparison] = useState(false);
@@ -178,6 +184,9 @@ export function useAppState() {
     economicRegion, setEconomicRegion,
     economicListType, setEconomicListType,
     userBalance, setUserBalance,
+    rechargeOrders, setRechargeOrders,
+    invoiceRecords, setInvoiceRecords,
+    savedInvoiceTitles, setSavedInvoiceTitles,
     showPurchaseModal, setShowPurchaseModal,
     purchaseInitialView, setPurchaseInitialView,
     pendingComparison, setPendingComparison,

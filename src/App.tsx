@@ -53,7 +53,7 @@ import {
 } from 'lucide-react';
 
 // Types
-import { FileItem, Notification, Template, PageType, PdfPreviewState } from './types';
+import { FileItem, Notification, Template, PageType, PdfPreviewState, InvoiceRecord } from './types';
 
 // Constants
 import { 
@@ -138,6 +138,9 @@ export default function App() {
     economicRegion, setEconomicRegion,
     economicListType, setEconomicListType,
     userBalance, setUserBalance,
+    rechargeOrders, setRechargeOrders,
+    invoiceRecords, setInvoiceRecords,
+    savedInvoiceTitles, setSavedInvoiceTitles,
     showPurchaseModal, setShowPurchaseModal,
     purchaseInitialView, setPurchaseInitialView,
     pendingComparison, setPendingComparison,
@@ -815,11 +818,41 @@ export default function App() {
     setCurrentPage('comparing');
   };
 
-  const handlePaymentSuccess = (addedPages?: number) => {
+  const handlePaymentSuccess = (
+    addedPages?: number,
+    orderDetails?: {
+      title: string;
+      unitPriceDesc: string;
+      pages: number;
+      amount: number;
+      paymentMethod: string;
+    }
+  ) => {
     setShowPurchaseModal(false);
     
     if (addedPages) {
       setUserBalance(prev => prev + addedPages);
+      const now = new Date();
+      const pad = (n: number) => n.toString().padStart(2, '0');
+      const timeStr = `${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(now.getDate())} ${pad(now.getHours())}:${pad(now.getMinutes())}:${pad(now.getSeconds())}`;
+      const dateCompact = `${now.getFullYear()}${pad(now.getMonth() + 1)}${pad(now.getDate())}`;
+
+      if (orderDetails) {
+        setRechargeOrders(prev => [
+          {
+            id: `ORD-${dateCompact}-${Math.floor(100 + Math.random() * 900)}`,
+            time: timeStr,
+            title: orderDetails.title,
+            unitPriceDesc: orderDetails.unitPriceDesc,
+            pages: orderDetails.pages,
+            amount: orderDetails.amount,
+            paymentMethod: orderDetails.paymentMethod,
+            invoiceStatus: 'unbilled',
+          },
+          ...prev,
+        ]);
+      }
+
       // Add a system notification
       const newNotification: Notification = {
         id: Date.now(),
@@ -1076,6 +1109,70 @@ export default function App() {
         onPaymentSuccess={handlePaymentSuccess}
         initialView={purchaseInitialView}
         userBalance={userBalance}
+        rechargeOrders={rechargeOrders}
+        invoiceRecords={invoiceRecords}
+        savedInvoiceTitles={savedInvoiceTitles}
+        onApplyInvoice={(payload, saveAsPreset) => {
+          const now = new Date();
+          const pad = (n: number) => n.toString().padStart(2, '0');
+          const issuedAt = `${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(now.getDate())} ${pad(now.getHours())}:${pad(now.getMinutes())}:${pad(now.getSeconds())}`;
+          const dateCompact = `${now.getFullYear()}${pad(now.getMonth() + 1)}${pad(now.getDate())}`;
+          const newId = `INV-${dateCompact}-${Math.floor(100 + Math.random() * 900)}`;
+          const invoiceNo = `2634${Math.floor(1000000000000000 + Math.random() * 8999999999999999)}`;
+
+          const newInvoice: InvoiceRecord = {
+            ...payload,
+            id: newId,
+            invoiceNo,
+            issuedAt,
+            status: '已开具',
+          };
+
+          setInvoiceRecords(prev => [newInvoice, ...prev]);
+          setRechargeOrders(prev =>
+            prev.map(order =>
+              payload.orderIds.includes(order.id)
+                ? { ...order, invoiceStatus: 'issued', invoiceId: newId }
+                : order
+            )
+          );
+
+          if (saveAsPreset) {
+            setSavedInvoiceTitles(prev => {
+              const exists = prev.some(
+                t => t.titleName === payload.titleName && t.taxId === payload.taxId
+              );
+              if (exists) return prev;
+              return [
+                ...prev,
+                {
+                  id: `title-${Date.now()}`,
+                  titleType: payload.titleType,
+                  titleName: payload.titleName,
+                  taxId: payload.taxId,
+                  bankName: payload.bankName,
+                  bankAccount: payload.bankAccount,
+                  companyAddress: payload.companyAddress,
+                  companyPhone: payload.companyPhone,
+                },
+              ];
+            });
+          }
+
+          setNotifications(prev => [
+            {
+              id: Date.now(),
+              type: 'system',
+              title: '开票申请已受理',
+              content: `您的${payload.invoiceType === 'special' ? '增值税专用发票' : '电子普通发票'}（¥${payload.amount.toFixed(2)}）开票申请已提交，将在三个工作日内开具，届时可在「我的订单」中查看并下载。`,
+              time: '刚刚',
+              read: false,
+            },
+            ...prev,
+          ]);
+
+          return newInvoice;
+        }}
       />
 
       {/* Change Password Modal */}

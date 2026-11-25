@@ -1,6 +1,6 @@
 import React from 'react';
 import { Clock, FileSearch, Fingerprint, Cpu } from 'lucide-react';
-import { Template } from '../types';
+import { Template, RechargeOrder, InvoiceRecord, InvoiceTitlePreset } from '../types';
 
 export const ALL_CHECK_TYPES = ['资信标比对', '技术标比对', '经济标比对', '文件设备特征比对'];
 export const ALL_CREDIT_ITEMS = ['法定代表人名称比对', '法定代表人身份证比对', '人员名称比对', '人员身份证比对', '手机号比对', '邮箱比对', '证书编号比对', '业绩名称比对', '地址比对', '统一社会信用代码比对', '签章查重', '引用内容查重'];
@@ -110,3 +110,73 @@ export const DEFAULT_TEMPLATES: Template[] = [
     }
   }
 ];
+
+export const INITIAL_RECHARGE_ORDERS: RechargeOrder[] = [
+  {
+    id: 'ORD-20260501-001',
+    time: '2026-05-01 10:23:45',
+    title: '500页充值套餐',
+    unitPriceDesc: '单价: 0.24元/页',
+    pages: 500,
+    amount: 120.00,
+    paymentMethod: '微信支付',
+    invoiceStatus: 'unbilled',
+  },
+  {
+    id: 'ORD-20260415-002',
+    time: '2026-04-15 14:12:00',
+    title: '2000页充值套餐',
+    unitPriceDesc: '单价: 0.20元/页',
+    pages: 2000,
+    amount: 400.00,
+    paymentMethod: '对公转账',
+    invoiceStatus: 'issued',
+    invoiceId: 'INV-20260416-001',
+  },
+  {
+    id: 'ORD-20260301-003',
+    time: '2026-03-01 09:30:00',
+    title: '100页充值套餐',
+    unitPriceDesc: '单价: 0.30元/页',
+    pages: 100,
+    amount: 30.00,
+    paymentMethod: '支付宝',
+    invoiceStatus: 'unbilled',
+  },
+];
+
+export const INITIAL_INVOICE_RECORDS: InvoiceRecord[] = [
+  {
+    id: 'INV-20260416-001',
+    invoiceNo: '26342000000184920315',
+    orderIds: ['ORD-20260415-002'],
+    orderSummary: '2000页充值套餐',
+    totalPages: 2000,
+    amount: 400.00,
+    invoiceType: 'special',
+    titleType: 'enterprise',
+    titleName: '安徽建工建设投资集团有限公司',
+    taxId: '91340100711774859K',
+    bankName: '中国建设银行合肥庐阳支行',
+    bankAccount: '34050146860800001294',
+    companyAddress: '安徽省合肥市蜀山区黄山路459号',
+    companyPhone: '0551-62865500',
+    remarks: '订单号: ORD-20260415-002',
+    issuedAt: '2026-04-16 09:42:18',
+    status: '已开具',
+  },
+];
+
+export const INITIAL_INVOICE_TITLES: InvoiceTitlePreset[] = [
+  {
+    id: 'title-1',
+    titleType: 'enterprise',
+    titleName: '安徽建工建设投资集团有限公司',
+    taxId: '91340100711774859K',
+    bankName: '中国建设银行合肥庐阳支行',
+    bankAccount: '34050146860800001294',
+    companyAddress: '安徽省合肥市蜀山区黄山路459号',
+    companyPhone: '0551-62865500',
+  },
+];
+

@@ -1,29 +1,64 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { X, Check, ChevronRight, ChevronLeft, Loader2, AlertCircle, Wallet, CheckCircle, XCircle } from 'lucide-react';
+import { X, Check, ChevronRight, ChevronLeft, Loader2, AlertCircle, Wallet, CheckCircle, XCircle, CheckCircle2, FileText } from 'lucide-react';
+import { InvoiceRecord, InvoiceTitlePreset, RechargeOrder } from '../../types';
+import { InvoiceApplyView, InvoicePreviewView } from './InvoiceViews';
 
-export type PurchaseViewState = 'main' | 'transfer' | 'records' | 'coupons';
+export type PurchaseViewState = 'main' | 'transfer' | 'records' | 'coupons' | 'invoice_apply' | 'invoice_preview';
+
+interface OrderPaymentInfo {
+  title: string;
+  unitPriceDesc: string;
+  pages: number;
+  amount: number;
+  paymentMethod: string;
+}
 
 interface PurchaseModalProps {
   isOpen: boolean;
   onClose: () => void;
   selectedSku: string;
   setSelectedSku: (sku: string) => void;
-  onPaymentSuccess: (addedPages?: number) => void;
+  onPaymentSuccess: (addedPages?: number, orderDetails?: OrderPaymentInfo) => void;
   initialView?: PurchaseViewState;
   userBalance: number;
+  rechargeOrders: RechargeOrder[];
+  invoiceRecords: InvoiceRecord[];
+  savedInvoiceTitles: InvoiceTitlePreset[];
+  onApplyInvoice: (
+    payload: Omit<InvoiceRecord, 'id' | 'invoiceNo' | 'issuedAt' | 'status'>,
+    saveAsPreset: boolean
+  ) => InvoiceRecord;
 }
 
-export default function PurchaseModal({ isOpen, onClose, selectedSku, setSelectedSku, onPaymentSuccess, initialView = 'main', userBalance }: PurchaseModalProps) {
+export default function PurchaseModal({
+  isOpen,
+  onClose,
+  selectedSku,
+  setSelectedSku,
+  onPaymentSuccess,
+  initialView = 'main',
+  userBalance,
+  rechargeOrders,
+  invoiceRecords,
+  savedInvoiceTitles,
+  onApplyInvoice,
+}: PurchaseModalProps) {
   const [view, setView] = useState<PurchaseViewState>(initialView);
   const [showTransferAlert, setShowTransferAlert] = useState(false);
   const [paymentMethod, setPaymentMethod] = useState<'wechat' | 'alipay'>('wechat');
-  const [recordsTab, setRecordsTab] = useState<'recharge' | 'usage'>('recharge');
+  const [recordsTab, setRecordsTab] = useState<'recharge' | 'usage' | 'invoices'>('recharge');
   const [paymentStatus, setPaymentStatus] = useState<'idle' | 'paying' | 'failed' | 'success'>('idle');
   const [paymentSimulationResult, setPaymentSimulationResult] = useState<'success' | 'failed'>('success');
   const [rechargePage, setRechargePage] = useState(1);
   const [usagePage, setUsagePage] = useState(1);
+  const [invoicePage, setInvoicePage] = useState(1);
   const [customPages, setCustomPages] = useState<number>(100);
+  const [selectedOrderIds, setSelectedOrderIds] = useState<string[]>([]);
+  const [activeInvoiceOrders, setActiveInvoiceOrders] = useState<RechargeOrder[]>([]);
+  const [previewInvoice, setPreviewInvoice] = useState<InvoiceRecord | null>(null);
+  const [justIssuedInvoice, setJustIssuedInvoice] = useState(false);
+  const [invoiceSuccessNotice, setInvoiceSuccessNotice] = useState<string | null>(null);
 
   const getPriceAndPages = () => {
     if (selectedSku === 'pages100') {
@@ -48,6 +83,9 @@ export default function PurchaseModal({ isOpen, onClose, selectedSku, setSelecte
       setPaymentMethod('wechat');
       setPaymentStatus('idle');
       setPaymentSimulationResult('success');
+      setSelectedOrderIds([]);
+      setJustIssuedInvoice(false);
+      setInvoiceSuccessNotice(null);
     }
   }, [isOpen, initialView]);
 
@@ -61,11 +99,65 @@ export default function PurchaseModal({ isOpen, onClose, selectedSku, setSelecte
     }
     if (paymentStatus === 'success') {
       const timer = setTimeout(() => {
-        onPaymentSuccess(getPriceAndPages().pages);
+        const info = getPriceAndPages();
+        const unitPrice = info.pages > 0 ? (info.price / info.pages).toFixed(2) : '0.30';
+        onPaymentSuccess(info.pages, {
+          title: info.label,
+          unitPriceDesc: `单价: ${unitPrice}元/页`,
+          pages: info.pages,
+          amount: info.price,
+          paymentMethod: paymentMethod === 'wechat' ? '微信支付' : '支付宝',
+        });
       }, 1500);
       return () => clearTimeout(timer);
     }
   }, [paymentStatus, paymentSimulationResult, onPaymentSuccess]);
+
+  const PAGE_SIZE = 5;
+  const unbilledOrders = rechargeOrders.filter((o) => o.invoiceStatus === 'unbilled');
+  const totalRechargePages = Math.max(1, Math.ceil(rechargeOrders.length / PAGE_SIZE));
+  const pagedRechargeOrders = rechargeOrders.slice(
+    (rechargePage - 1) * PAGE_SIZE,
+    rechargePage * PAGE_SIZE
+  );
+  const totalInvoicePages = Math.max(1, Math.ceil(invoiceRecords.length / PAGE_SIZE));
+  const pagedInvoiceRecords = invoiceRecords.slice(
+    (invoicePage - 1) * PAGE_SIZE,
+    invoicePage * PAGE_SIZE
+  );
+
+  const selectedOrdersAmount = rechargeOrders
+    .filter((o) => selectedOrderIds.includes(o.id))
+    .reduce((sum, o) => sum + o.amount, 0);
+
+  const toggleOrderSelect = (orderId: string) => {
+    setSelectedOrderIds((prev) =>
+      prev.includes(orderId) ? prev.filter((id) => id !== orderId) : [...prev, orderId]
+    );
+  };
+
+  const toggleSelectAllUnbilled = () => {
+    const unbilledIds = unbilledOrders.map((o) => o.id);
+    const allSelected = unbilledIds.length > 0 && unbilledIds.every((id) => selectedOrderIds.includes(id));
+    setSelectedOrderIds(allSelected ? [] : unbilledIds);
+  };
+
+  const openInvoiceApplyForOrders = (orders: RechargeOrder[]) => {
+    setActiveInvoiceOrders(orders);
+    setJustIssuedInvoice(false);
+    setInvoiceSuccessNotice(null);
+    setView('invoice_apply');
+  };
+
+  const openInvoicePreviewById = (invoiceId?: string) => {
+    if (!invoiceId) return;
+    const found = invoiceRecords.find((inv) => inv.id === invoiceId);
+    if (found) {
+      setPreviewInvoice(found);
+      setJustIssuedInvoice(false);
+      setView('invoice_preview');
+    }
+  };
 
   return (
     <AnimatePresence>
@@ -76,13 +168,15 @@ export default function PurchaseModal({ isOpen, onClose, selectedSku, setSelecte
             if (e.target === e.currentTarget) onClose();
           }}
         >
-          <div className="bg-white w-[800px] rounded-xl shadow-2xl overflow-hidden flex flex-col animate-in fade-in zoom-in-95 duration-200 relative">
+          <div className="bg-white w-[880px] max-w-[95vw] rounded-xl shadow-2xl overflow-hidden flex flex-col animate-in fade-in zoom-in-95 duration-200 relative">
             {/* Header */}
             <div className="flex items-center justify-between px-6 py-4 border-b border-slate-100">
               <h3 className="text-lg font-medium text-slate-800">
                 {view === 'transfer' ? '对公转账' : 
                  view === 'records' ? '我的订单' : 
-                 view === 'coupons' ? '优惠券' : '充值'}
+                 view === 'coupons' ? '优惠券' :
+                 view === 'invoice_apply' ? '申请开票' :
+                 view === 'invoice_preview' ? '电子发票' : '充值'}
               </h3>
               <button onClick={onClose} className="text-slate-400 hover:text-slate-600">
                 <X className="w-5 h-5" />
@@ -379,99 +473,200 @@ export default function PurchaseModal({ isOpen, onClose, selectedSku, setSelecte
 
               {/* Records View */}
               {view === 'records' && (
-                <div className="bg-white rounded-lg shadow-sm border border-slate-200 p-6 flex flex-col h-[600px] overflow-hidden">
-                  <div className="flex items-center justify-between mb-6 shrink-0">
+                <div className="bg-white rounded-xl shadow-sm border border-slate-200/90 p-6 flex flex-col h-[620px] overflow-hidden">
+                  <div className="flex items-center justify-between mb-5 shrink-0">
                     <h4 className="text-xl font-bold text-slate-800">账号与权益</h4>
-                    <button onClick={() => setView('main')} className="px-4 py-1.5 border border-slate-300 rounded-lg text-slate-600 hover:bg-slate-50 transition-colors font-medium text-sm shadow-sm">
+                    <button onClick={() => setView('main')} className="px-4 py-1.5 border border-slate-200 rounded-lg text-slate-600 hover:bg-slate-50 transition-colors font-medium text-sm whitespace-nowrap shrink-0">
                       返回购买
                     </button>
                   </div>
                   
-                  <div className="overflow-y-auto pr-2 space-y-6 flex-1 custom-scrollbar">
+                  <div className="overflow-y-auto pr-1 space-y-5 flex-1 custom-scrollbar">
+                    {invoiceSuccessNotice && (
+                      <div className="flex items-center justify-between px-4 py-2.5 rounded-lg bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs">
+                        <div className="flex items-center gap-2">
+                          <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+                          <span>{invoiceSuccessNotice}</span>
+                        </div>
+                        <button
+                          type="button"
+                          onClick={() => setInvoiceSuccessNotice(null)}
+                          className="text-emerald-600 hover:text-emerald-800"
+                        >
+                          <X className="w-3.5 h-3.5" />
+                        </button>
+                      </div>
+                    )}
                     {/* Account Info & Rights */}
                     <div className="grid grid-cols-2 gap-4">
-                      <div className="border border-slate-200 p-5 rounded-xl bg-slate-50/50 flex flex-col justify-center">
-                        <div className="text-slate-500 mb-1.5 whitespace-nowrap text-sm font-medium">当前账号</div>
-                        <div className="text-2xl font-bold text-slate-800 tracking-tight">13812340000</div>
+                      <div className="border border-slate-200/90 p-5 rounded-xl bg-white flex flex-col justify-center">
+                        <div className="text-slate-500 mb-2 whitespace-nowrap text-xs">当前账号</div>
+                        <div className="text-2xl font-bold text-slate-800 tracking-tight font-mono tabular-nums">18906181561</div>
                       </div>
-                      <div className="border border-indigo-100 p-5 rounded-xl bg-gradient-to-br from-indigo-50/50 to-blue-50/50 flex flex-col justify-center">
-                        <div className="text-indigo-600/80 mb-1 whitespace-nowrap text-sm font-medium">账户剩余额度</div>
-                        <div className="flex items-baseline gap-1 mt-0.5">
-                          <span className="text-3xl font-bold text-indigo-700">{userBalance.toLocaleString()}</span>
-                          <span className="text-sm text-indigo-600 font-medium">页</span>
+                      <div className="border border-indigo-100 p-5 rounded-xl bg-[#F8FAFF] flex flex-col justify-center">
+                        <div className="text-indigo-600 mb-2.5 whitespace-nowrap text-xs font-medium">当前权益</div>
+                        <div className="space-y-1.5 text-sm">
+                          <div className="flex items-center justify-between">
+                            <span className="text-slate-500">权益名称：</span>
+                            <span className="text-indigo-600 font-medium">云保标比对页数</span>
+                          </div>
+                          <div className="flex items-center justify-between">
+                            <span className="text-slate-500">剩余页数：</span>
+                            <span className="text-indigo-600 font-bold font-mono tabular-nums">{userBalance.toLocaleString()} 页</span>
+                          </div>
                         </div>
-                        <p className="text-xs text-slate-400 mt-1.5 leading-none">* 单次比对根据投标文件实际总页数进行扣减</p>
                       </div>
                     </div>
 
                     {/* Tabs for Records */}
-                    <div className="pt-2 pb-6">
-                       <div className="flex border-b border-slate-200 mb-4">
-                         <button 
-                           onClick={() => setRecordsTab('recharge')}
-                           className={`px-4 py-2 font-medium text-sm border-b-2 transition-colors -mb-px ${recordsTab === 'recharge' ? 'border-indigo-600 text-indigo-600' : 'border-transparent text-slate-500 hover:text-slate-700'}`}
-                         >
-                           充值记录
-                         </button>
-                         <button 
-                           onClick={() => setRecordsTab('usage')}
-                           className={`px-4 py-2 font-medium text-sm border-b-2 transition-colors -mb-px ${recordsTab === 'usage' ? 'border-indigo-600 text-indigo-600' : 'border-transparent text-slate-500 hover:text-slate-700'}`}
-                         >
-                           消耗记录
-                         </button>
+                    <div className="pt-1 pb-4">
+                       <div className="flex items-center justify-between border-b border-slate-200 mb-4">
+                         <div className="flex">
+                           <button 
+                             onClick={() => setRecordsTab('recharge')}
+                             className={`px-4 py-2.5 font-medium text-sm border-b-2 transition-colors -mb-px whitespace-nowrap shrink-0 ${recordsTab === 'recharge' ? 'border-indigo-600 text-indigo-600' : 'border-transparent text-slate-500 hover:text-slate-700'}`}
+                           >
+                             充值记录
+                           </button>
+                           <button 
+                             onClick={() => setRecordsTab('usage')}
+                             className={`px-4 py-2.5 font-medium text-sm border-b-2 transition-colors -mb-px whitespace-nowrap shrink-0 ${recordsTab === 'usage' ? 'border-indigo-600 text-indigo-600' : 'border-transparent text-slate-500 hover:text-slate-700'}`}
+                           >
+                             消耗记录
+                           </button>
+                           <button 
+                             onClick={() => setRecordsTab('invoices')}
+                             className={`px-4 py-2.5 font-medium text-sm border-b-2 transition-colors -mb-px whitespace-nowrap shrink-0 ${recordsTab === 'invoices' ? 'border-indigo-600 text-indigo-600' : 'border-transparent text-slate-500 hover:text-slate-700'}`}
+                           >
+                             开票记录
+                           </button>
+                         </div>
+
+                         {recordsTab === 'recharge' && unbilledOrders.length > 0 && (
+                           <div className="flex items-center gap-3 pb-1.5">
+                             {selectedOrderIds.length > 0 ? (
+                               <>
+                                 <span className="text-xs text-slate-500 font-mono tabular-nums">
+                                   已选 {selectedOrderIds.length} 笔 · ¥{selectedOrdersAmount.toFixed(2)}
+                                 </span>
+                                 <button
+                                   onClick={() =>
+                                     openInvoiceApplyForOrders(
+                                       rechargeOrders.filter((o) => selectedOrderIds.includes(o.id))
+                                     )
+                                   }
+                                   className="inline-flex items-center gap-1 px-3 py-1 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 transition-colors text-xs font-medium whitespace-nowrap shrink-0"
+                                 >
+                                   {selectedOrderIds.length > 1 ? '合并开票' : '申请开票'}
+                                 </button>
+                               </>
+                             ) : (
+                               <button
+                                 onClick={() => openInvoiceApplyForOrders(unbilledOrders)}
+                                 className="text-xs font-medium text-indigo-600 hover:text-indigo-700 transition-colors whitespace-nowrap shrink-0"
+                               >
+                                 批量合并开票 ({unbilledOrders.length})
+                               </button>
+                             )}
+                           </div>
+                         )}
                        </div>
 
                        {recordsTab === 'recharge' && (
                          <div className="flex flex-col gap-4">
-                           <div className="border border-slate-200 rounded-lg overflow-hidden shrink-0">
+                           <div className="border border-slate-200/80 rounded-xl overflow-hidden shrink-0">
                              <table className="w-full text-left text-sm">
-                               <thead className="bg-slate-50 text-slate-600 border-b border-slate-200">
+                               <thead className="bg-slate-50/70 text-slate-500 border-b border-slate-200/80 text-xs">
                                  <tr>
-                                   <th className="px-5 py-3.5 font-medium">充值时间</th>
-                                   <th className="px-5 py-3.5 font-medium">商品说明</th>
-                                   <th className="px-5 py-3.5 font-medium">金额</th>
+                                   <th className="pl-4 pr-1 py-3.5 w-9">
+                                     <input
+                                       type="checkbox"
+                                       title="全选可开票订单"
+                                       disabled={unbilledOrders.length === 0}
+                                       checked={
+                                         unbilledOrders.length > 0 &&
+                                         unbilledOrders.every((o) => selectedOrderIds.includes(o.id))
+                                       }
+                                       onChange={toggleSelectAllUnbilled}
+                                       className="w-3.5 h-3.5 rounded border-slate-300 text-indigo-600 focus:ring-indigo-500 disabled:opacity-40"
+                                     />
+                                   </th>
+                                   <th className="px-4 py-3.5 font-medium">充值时间</th>
+                                   <th className="px-4 py-3.5 font-medium">商品说明</th>
+                                   <th className="px-4 py-3.5 font-medium">金额</th>
+                                   <th className="px-5 py-3.5 font-medium text-right">开票</th>
                                  </tr>
                                </thead>
                                <tbody className="divide-y divide-slate-100">
-                                 <tr className="hover:bg-slate-50/50 transition-colors">
-                                   <td className="px-5 py-3.5 text-slate-500 font-mono text-xs">2026-05-01 10:23:45</td>
-                                   <td className="px-5 py-3.5 text-slate-900 leading-snug">
-                                     500页充值套餐<br/><span className="text-xs text-slate-500 mt-0.5 inline-block">单价: 0.24元/页</span>
-                                   </td>
-                                   <td className="px-5 py-3.5 text-slate-900 font-medium">¥120.00</td>
-                                 </tr>
-                                 <tr className="hover:bg-slate-50/50 transition-colors">
-                                   <td className="px-5 py-3.5 text-slate-500 font-mono text-xs">2026-04-15 14:12:00</td>
-                                   <td className="px-5 py-3.5 text-slate-900 leading-snug">
-                                     2000页充值套餐<br/><span className="text-xs text-slate-500 mt-0.5 inline-block">单价: 0.20元/页</span>
-                                   </td>
-                                   <td className="px-5 py-3.5 text-slate-900 font-medium">¥400.00</td>
-                                 </tr>
-                                 <tr className="hover:bg-slate-50/50 transition-colors">
-                                   <td className="px-5 py-3.5 text-slate-500 font-mono text-xs">2026-03-01 09:30:00</td>
-                                   <td className="px-5 py-3.5 text-slate-900 leading-snug">
-                                     100页充值套餐<br/><span className="text-xs text-slate-500 mt-0.5 inline-block">单价: 0.30元/页</span>
-                                   </td>
-                                   <td className="px-5 py-3.5 text-slate-900 font-medium">¥30.00</td>
-                                 </tr>
+                                 {pagedRechargeOrders.map((order) => {
+                                   const isUnbilled = order.invoiceStatus === 'unbilled';
+                                   const isSelected = selectedOrderIds.includes(order.id);
+                                   return (
+                                     <tr
+                                       key={order.id}
+                                       className={`transition-colors ${
+                                         isSelected ? 'bg-indigo-50/35' : 'hover:bg-slate-50/50'
+                                       }`}
+                                     >
+                                       <td className="pl-4 pr-1 py-3.5">
+                                         <input
+                                           type="checkbox"
+                                           disabled={!isUnbilled}
+                                           checked={isSelected}
+                                           onChange={() => toggleOrderSelect(order.id)}
+                                           className="w-3.5 h-3.5 rounded border-slate-300 text-indigo-600 focus:ring-indigo-500 disabled:opacity-25 disabled:cursor-not-allowed"
+                                         />
+                                       </td>
+                                       <td className="px-4 py-3.5 text-slate-600 font-mono text-xs tabular-nums">
+                                         {order.time}
+                                       </td>
+                                       <td className="px-4 py-3.5 text-slate-800">
+                                         {order.title}
+                                       </td>
+                                       <td className="px-4 py-3.5 text-slate-900 font-semibold font-mono tabular-nums">
+                                         ¥{order.amount.toFixed(2)}
+                                       </td>
+                                       <td className="px-5 py-3.5 text-right">
+                                         {isUnbilled ? (
+                                           <button
+                                             onClick={() => openInvoiceApplyForOrders([order])}
+                                             className="px-2.5 py-1 text-xs font-medium text-indigo-600 hover:text-indigo-700 hover:bg-indigo-50 border border-indigo-200 rounded-md transition-colors whitespace-nowrap shrink-0"
+                                           >
+                                             申请开票
+                                           </button>
+                                         ) : (
+                                           <div className="inline-flex items-center justify-end gap-2.5">
+                                             <span className="text-xs text-slate-400">已开票</span>
+                                             <button
+                                               onClick={() => openInvoicePreviewById(order.invoiceId)}
+                                               className="text-xs font-medium text-indigo-600 hover:text-indigo-700 hover:underline transition-colors whitespace-nowrap shrink-0"
+                                             >
+                                               查看发票
+                                             </button>
+                                           </div>
+                                         )}
+                                       </td>
+                                     </tr>
+                                   );
+                                 })}
                                </tbody>
                              </table>
                            </div>
-                           <div className="flex items-center justify-between text-sm text-slate-500 px-1">
-                             <div>共 3 条记录</div>
+                           <div className="flex items-center justify-between text-xs text-slate-500 px-1">
+                             <div>共 {rechargeOrders.length} 条记录</div>
                              <div className="flex items-center gap-2">
                                <button 
                                  disabled={rechargePage === 1}
                                  onClick={() => setRechargePage(p => Math.max(1, p - 1))}
-                                 className="p-1 rounded hover:bg-slate-100 disabled:opacity-50 disabled:cursor-not-allowed"
+                                 className="p-1 rounded hover:bg-slate-100 disabled:opacity-40 disabled:cursor-not-allowed"
                                >
                                  <ChevronLeft className="w-4 h-4" />
                                </button>
-                               <span className="font-medium text-slate-700">{rechargePage} / 1</span>
+                               <span className="font-medium text-slate-700 font-mono tabular-nums">{rechargePage} / {totalRechargePages}</span>
                                <button 
-                                 disabled={rechargePage === 1}
-                                 onClick={() => setRechargePage(p => p + 1)}
-                                 className="p-1 rounded hover:bg-slate-100 disabled:opacity-50 disabled:cursor-not-allowed"
+                                 disabled={rechargePage >= totalRechargePages}
+                                 onClick={() => setRechargePage(p => Math.min(totalRechargePages, p + 1))}
+                                 className="p-1 rounded hover:bg-slate-100 disabled:opacity-40 disabled:cursor-not-allowed"
                                >
                                  <ChevronRight className="w-4 h-4" />
                                </button>
@@ -538,9 +733,123 @@ export default function PurchaseModal({ isOpen, onClose, selectedSku, setSelecte
                            </div>
                          </div>
                        )}
-                    </div>
-                  </div>
-                </div>
+
+                        {recordsTab === 'invoices' && (
+                          <div className="flex flex-col gap-4">
+                            {invoiceRecords.length > 0 ? (
+                              <>
+                                <div className="border border-slate-200/80 rounded-xl overflow-hidden shrink-0">
+                                  <table className="w-full text-left text-sm">
+                                    <thead className="bg-slate-50/70 text-slate-500 border-b border-slate-200/80 text-xs">
+                                      <tr>
+                                        <th className="px-5 py-3.5 font-medium">开票时间</th>
+                                        <th className="px-4 py-3.5 font-medium">发票抬头 / 发票号码</th>
+                                        <th className="px-4 py-3.5 font-medium">金额</th>
+                                        <th className="px-5 py-3.5 font-medium text-right">操作</th>
+                                      </tr>
+                                    </thead>
+                                    <tbody className="divide-y divide-slate-100">
+                                      {pagedInvoiceRecords.map((inv) => (
+                                        <tr key={inv.id} className="hover:bg-slate-50/50 transition-colors">
+                                          <td className="px-5 py-3.5 text-slate-600 font-mono text-xs tabular-nums">
+                                            {inv.issuedAt}
+                                          </td>
+                                          <td className="px-4 py-3.5">
+                                            <div className="font-medium text-slate-800">{inv.titleName}</div>
+                                            <div className="text-xs text-slate-400 mt-0.5 font-mono tabular-nums">
+                                              {inv.invoiceType === 'special' ? '数电专票' : '数电普票'} · {inv.invoiceNo}
+                                            </div>
+                                          </td>
+                                          <td className="px-4 py-3.5 font-semibold text-slate-900 font-mono tabular-nums">
+                                            ¥{inv.amount.toFixed(2)}
+                                          </td>
+                                          <td className="px-5 py-3.5 text-right">
+                                            <div className="inline-flex items-center justify-end gap-2.5">
+                                              <span className="text-xs text-emerald-700 font-medium">
+                                                {inv.status}
+                                              </span>
+                                              <button
+                                                onClick={() => {
+                                                  setPreviewInvoice(inv);
+                                                  setJustIssuedInvoice(false);
+                                                  setView('invoice_preview');
+                                                }}
+                                                className="px-2.5 py-1 text-xs font-medium text-indigo-600 hover:text-indigo-700 hover:bg-indigo-50 border border-indigo-200 rounded-md transition-colors whitespace-nowrap shrink-0"
+                                              >
+                                                查看发票
+                                              </button>
+                                            </div>
+                                          </td>
+                                        </tr>
+                                      ))}
+                                    </tbody>
+                                  </table>
+                                </div>
+                                <div className="flex items-center justify-between text-xs text-slate-500 px-1">
+                                  <div>共 {invoiceRecords.length} 条记录</div>
+                                  <div className="flex items-center gap-2">
+                                    <button
+                                      disabled={invoicePage === 1}
+                                      onClick={() => setInvoicePage((p) => Math.max(1, p - 1))}
+                                      className="p-1 rounded hover:bg-slate-100 disabled:opacity-40 disabled:cursor-not-allowed"
+                                    >
+                                      <ChevronLeft className="w-4 h-4" />
+                                    </button>
+                                    <span className="font-medium text-slate-700 font-mono tabular-nums">
+                                      {invoicePage} / {totalInvoicePages}
+                                    </span>
+                                    <button
+                                      disabled={invoicePage >= totalInvoicePages}
+                                      onClick={() => setInvoicePage((p) => Math.min(totalInvoicePages, p + 1))}
+                                      className="p-1 rounded hover:bg-slate-100 disabled:opacity-50 disabled:cursor-not-allowed"
+                                    >
+                                      <ChevronRight className="w-4 h-4" />
+                                    </button>
+                                  </div>
+                                </div>
+                              </>
+                            ) : (
+                              <div className="border border-slate-200 rounded-lg p-10 text-center text-slate-500">
+                                <FileText className="w-8 h-8 text-slate-300 mx-auto mb-2" />
+                                <div className="text-sm font-medium text-slate-700">暂无开票记录</div>
+                                <p className="text-xs text-slate-400 mt-1">可在“充值记录”中选择已支付订单申请开具电子发票</p>
+                              </div>
+                            )}
+                          </div>
+                        )}
+                     </div>
+                   </div>
+                 </div>
+               )}
+
+              {/* Invoice Application View */}
+              {view === 'invoice_apply' && (
+                <InvoiceApplyView
+                  selectedOrders={activeInvoiceOrders}
+                  savedTitles={savedInvoiceTitles}
+                  onBack={() => setView('records')}
+                  onSubmitInvoice={(payload, saveAsPreset) => {
+                    onApplyInvoice(payload, saveAsPreset);
+                    setSelectedOrderIds([]);
+                    setInvoiceSuccessNotice(
+                      '开票申请已提交，工作人员将在三个工作日内为您开具发票，开具后可在订单中点击「查看发票」下载。'
+                    );
+                    setRecordsTab('recharge');
+                    setView('records');
+                  }}
+                />
+              )}
+
+              {/* Invoice Preview View */}
+              {view === 'invoice_preview' && previewInvoice && (
+                <InvoicePreviewView
+                  invoice={previewInvoice}
+                  justIssued={justIssuedInvoice}
+                  onBack={() => {
+                    setRecordsTab('recharge');
+                    setView('records');
+                  }}
+                />
               )}
 
               {/* Coupons View */}

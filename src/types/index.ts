@@ -65,3 +65,50 @@ export type PdfPreviewState = {
   item?: any;
   occurrencesCount?: number;
 };
+
+export type InvoiceType = 'normal' | 'special';
+export type InvoiceTitleType = 'enterprise' | 'personal';
+
+export type InvoiceTitlePreset = {
+  id: string;
+  titleType: InvoiceTitleType;
+  titleName: string;
+  taxId?: string;
+  bankName?: string;
+  bankAccount?: string;
+  companyAddress?: string;
+  companyPhone?: string;
+};
+
+export type InvoiceRecord = {
+  id: string;
+  invoiceNo: string;
+  orderIds: string[];
+  orderSummary: string;
+  totalPages: number;
+  amount: number;
+  invoiceType: InvoiceType;
+  titleType: InvoiceTitleType;
+  titleName: string;
+  taxId?: string;
+  bankName?: string;
+  bankAccount?: string;
+  companyAddress?: string;
+  companyPhone?: string;
+  remarks?: string;
+  issuedAt: string;
+  status: '已开具';
+};
+
+export type RechargeOrder = {
+  id: string;
+  time: string;
+  title: string;
+  unitPriceDesc: string;
+  pages: number;
+  amount: number;
+  paymentMethod: string;
+  invoiceStatus: 'unbilled' | 'issued';
+  invoiceId?: string;
+};
+
